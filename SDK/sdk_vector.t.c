@@ -28,7 +28,6 @@ int main(int argc, char** argv) {
     
     sdk_vector_destroy(&v);
     
-    int a = 1/0;
     
     return 0;
 }

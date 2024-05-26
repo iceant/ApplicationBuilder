@@ -20,7 +20,7 @@ static void* sdk_memory__tlsf_pool=0;
 void sdk_memory__exit_hook(int signal)
 {
     if(sdk_memory__tlsf_pool){
-//        printf("sdk_memory__exit_hook: %d\n", signal);
+        printf("sdk_memory__exit_hook: %d\n", signal);
         std_free(sdk_memory__tlsf_pool);
         sdk_memory__tlsf_pool = 0;
     }
@@ -49,7 +49,7 @@ SDK_C_CONSTRUCTOR(sdk_memory__ctor)
     
     sdk_memory_init(sdk_memory__tlsf_pool, SDK_TLSF_POOL_SIZE);
     
-//    atexit(sdk_memory__exit_hook);
+    atexit((void (*)(void)) sdk_memory__exit_hook);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
