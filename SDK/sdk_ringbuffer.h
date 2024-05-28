@@ -27,7 +27,6 @@ typedef struct sdk_ringbuffer_s{
 #define SDK_RINGBUFFER_EBUFSIZE         (-0x12)
 #define SDK_RINGBUFFER_EINDEX           (-0x13)
 #define SDK_RINGBUFFER_EINVAL           (-0x14)
-#define SDK_RINGBUFFER_OUTOFBOUNDARY    (-0x15)
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -36,7 +35,7 @@ typedef struct sdk_ringbuffer_s{
     ?((B)->write_idx - (B)->read_idx)                                 \
     :((B)->buffer_size - (B)->read_idx + (B)->write_idx))
 
-#define SDK_RINGBUFFER_CAPACITY(S) (((S)->buffer_size-(S)->object_size)/(S)->object_size)
+#define SDK_RINGBUFFER_CAPACITY(S) (((S)->buffer_size - (S)->object_size)/(S)->object_size)
 
 #define SDK_RINGBUFFER_AVAILABLE(S) (SDK_RINGBUFFER_CAPACITY(S)-SDK_RINGBUFFER_SIZE(S))
 
@@ -47,6 +46,11 @@ typedef struct sdk_ringbuffer_s{
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
+/*
+ * return
+ *      SDK_RINGBUFFER_EBUFSIZE: if (buffer_size-item_size) < item_size
+ *      SDK_RINGBUFFER_OK: everything is fine!
+ */
 int sdk_ringbuffer_init(sdk_ringbuffer_t* rb, void* buffer, sdk_size_t buffer_size, sdk_size_t item_size);
 
 /* contained how many items */
