@@ -55,15 +55,15 @@ int sdk_stringbuffer_peek(sdk_stringbuffer_t* sbuf, char* item)
     return SDK_STRINGBUFFER_OK;
 }
 
-#define CHECK_INDEX(B, ACTION) \
+#define CHECK_INDEX(B, I, ACTION) \
 if((B)->read_idx == (B)->write_idx){ \
     ACTION \
 }                     \
-if(idx>=(B)->buffer_size){            \
+if((I)>=(B)->buffer_size){            \
     ACTION \
 }                     \
 sdk_size_t size = SDK_STRINGBUFFER_SIZE((B)); \
-if( idx > size){      \
+if( (I) > size){      \
     ACTION \
 }
 
@@ -71,7 +71,7 @@ if( idx > size){      \
 char sdk_stringbuffer_get(sdk_stringbuffer_t* sbuf, sdk_size_t idx)
 {
 
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EVALUE;)
+    CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_EVALUE;)
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
     if(next_read_idx>=sbuf->buffer_size){
@@ -112,7 +112,7 @@ int sdk_stringbuffer_advance_read_idx(sdk_stringbuffer_t * sbuf, sdk_size_t idx)
 //        return SDK_STRINGBUFFER_OUTOFBOUNDARY;
 //    }
 
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EINVAL;)
+    CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_EINVAL;)
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
     if(next_read_idx>=sbuf->buffer_size){
@@ -146,7 +146,7 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
 //        return SDK_STRINGBUFFER_INVALID_INDEX;
 //    }
 
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EINDEX;)
+    CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_EINDEX;)
 
     if (needle_size > size) {
         return SDK_STRINGBUFFER_EINDEX;
@@ -308,7 +308,7 @@ sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register 
 
 uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
 {
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_READ_U32_EVAL;)
+    CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_READ_U32_EVAL;)
 
 //    /* BUFFER IS EMPTY */
 //    if(sbuf->read_idx == sbuf->write_idx){
@@ -351,7 +351,7 @@ uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_b
 
 uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
 {
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_READ_U16_EVAL;)
+    CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_READ_U16_EVAL;)
 
 //    /* BUFFER IS EMPTY */
 //    if(sbuf->read_idx == sbuf->write_idx){

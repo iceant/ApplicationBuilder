@@ -4,17 +4,17 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-#define CHECK_INDEX(R, ACTION) \
-    if(rb->read_idx == rb->write_idx){ \
-        ACTION  \
-    }                          \
-    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb); \
-    if(idx>capacity){              \
-        ACTION  \
-    }                          \
-    sdk_size_t size = SDK_RINGBUFFER_SIZE(rb);         \
-    if( idx > size){           \
-        ACTION  \
+#define CHECK_INDEX(R, I, ACTION) \
+    if((R)->read_idx == (R)->write_idx){ \
+        ACTION                    \
+    }                             \
+    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY((R)); \
+    if((I)>capacity){  \
+        ACTION                    \
+    }                             \
+    sdk_size_t size = SDK_RINGBUFFER_SIZE((R));         \
+    if( (I) > size){              \
+        ACTION                    \
     }
 
 
@@ -101,7 +101,7 @@ void* sdk_ringbuffer_put_slot(sdk_ringbuffer_t* rb)
 
 int sdk_ringbuffer_peek(sdk_ringbuffer_t * rb, sdk_size_t idx, void* item){
 
-    CHECK_INDEX(rb, return SDK_RINGBUFFER_EINDEX;)
+    CHECK_INDEX(rb, idx, return SDK_RINGBUFFER_EINDEX;)
 
 //    /* 确保有数据 */
 //    if(rb->read_idx == rb->write_idx){
