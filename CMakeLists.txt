@@ -3,4 +3,4 @@ project(ApplicationBuilder C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_subdirectory(SDK)
+add_subdirectory(GameAI)

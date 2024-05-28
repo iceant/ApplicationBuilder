@@ -30,7 +30,7 @@ struct sdk_list_node_s {
 #define SDK_LIST_HEAD(L) (SDK_LIST_NEXT(L))
 
 #define SDK_LIST_DATA(ptr, type, field) \
-  ((type *) ((char *) (ptr) - ((unsigned long) &((type *) 0)->field)))
+  ((type *)((char *)(ptr) - (unsigned long)(&((type *)0)->field)))
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
