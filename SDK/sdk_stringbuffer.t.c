@@ -24,7 +24,7 @@ int main(int argc, char** argv){
     sdk_size_t idx = sdk_stringbuffer_find(&sbuf, 0, "1234", 4);
     printf("find(1234)=%d\n", idx);
 
-    if(idx!=SDK_STRINGBUFFER_INVALID_INDEX){
+    if(idx != SDK_STRINGBUFFER_EINDEX){
         int err = sdk_stringbuffer_advance_read_idx(&sbuf, idx);
         printf("sdk_stringbuffer_advance_read_idx: code=%d, read_idx=%d\n", err, sbuf.read_idx);
     }

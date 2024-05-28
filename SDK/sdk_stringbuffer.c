@@ -71,7 +71,7 @@ if( idx > size){      \
 char sdk_stringbuffer_get(sdk_stringbuffer_t* sbuf, sdk_size_t idx)
 {
 
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_INVALID_VALUE;)
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EVALUE;)
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
     if(next_read_idx>=sbuf->buffer_size){
@@ -146,10 +146,10 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
 //        return SDK_STRINGBUFFER_INVALID_INDEX;
 //    }
 
-    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_INVALID_INDEX;)
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EINDEX;)
 
     if (needle_size > size) {
-        return SDK_STRINGBUFFER_INVALID_INDEX;
+        return SDK_STRINGBUFFER_EINDEX;
     }
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
@@ -171,7 +171,7 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
     }
 
     if(i==size){
-        return SDK_STRINGBUFFER_INVALID_INDEX;
+        return SDK_STRINGBUFFER_EINDEX;
     }
     return i;
 }
