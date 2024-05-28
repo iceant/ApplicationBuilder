@@ -16,9 +16,10 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
+#define GAI_ACTION_STATUS_UNKNOWN           0
 #define GAI_ACTION_STATUS_RUNNING           1
 #define GAI_ACTION_STATUS_TERMINATED        2
-#define GAI_ACTION_STATUS_UNINITIALIZED     4
+#define GAI_ACTION_STATUS_UNINITIALIZED     3
 
 #define GAI_ACTION_STATUS_IS_VALID(S) \
     ((S)==GAI_ACTION_STATUS_RUNNING  \

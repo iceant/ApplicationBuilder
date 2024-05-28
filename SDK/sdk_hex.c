@@ -41,7 +41,7 @@ void sdk_hex_dump(const char* name, const void* data, int size) {
 ////
 #define MIN(A, B) ((A)>(B)?(B):(A))
 
-sdk_size_t sdk_hex_encode(char* buffer, uint32_t offset, sdk_size_t buffer_size, const uint8_t *data, sdk_size_t data_offset, sdk_size_t data_size, os_bool_t isUpperCase, sdk_byteorder_t byteOrder)
+sdk_size_t sdk_hex_encode(char* buffer, uint32_t offset, sdk_size_t buffer_size, const uint8_t *data, sdk_size_t data_offset, sdk_size_t data_size, sdk_bool_t isUpperCase, sdk_byteorder_t byteOrder)
 {
     sdk_size_t i;
     sdk_size_t index;

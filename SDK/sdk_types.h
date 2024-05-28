@@ -100,9 +100,9 @@ typedef sdk_uint_t sdk_size_t;
 typedef sdk_int_t  sdk_intptr_t;
 typedef sdk_uint_t  sdk_uintptr_t;
 
-#define os_bool_t   bool
-#define OS_TRUE     true
-#define OS_FALSE    false
+#define sdk_bool_t   bool
+#define SDK_TRUE     true
+#define SDK_FALSE    false
 
 
 

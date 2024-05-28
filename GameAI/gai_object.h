@@ -24,6 +24,9 @@ typedef enum gai_object_type_enum{
     kGAI_ObjectType_Evaluator,
     kGAI_ObjectType_DecisionTree,
     kGAI_ObjectType_DecisionTreeNode,
+    kGAI_ObjectType_FSM_State,
+    kGAI_ObjectType_FSM_Transition,
+    kGAI_ObjectType_FSM_Machine,
 }gai_object_type_t;
 
 typedef struct gai_object_s{
@@ -37,7 +40,5 @@ typedef struct gai_object_s{
 ////
 
 gai_err_t gai_object_init(gai_object_t* object, const char* name, gai_object_type_t type, void* userdata);
-
-
 
 #endif /* INCLUDED_GAI_OBJECT_H */

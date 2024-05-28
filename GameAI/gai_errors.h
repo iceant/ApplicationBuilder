@@ -14,6 +14,7 @@ typedef int gai_err_t;
 #define GAI_EINVAL      (-2)
 #define GAI_ENOMEM      (-3)
 #define GAI_ERETVAL     (-4)
+#define GAI_ENOTEXIST   (-5)
 
 
 #endif /* INCLUDED_GAI_ERRORS_H */
