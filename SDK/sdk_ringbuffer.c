@@ -3,6 +3,23 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
+
+#define CHECK_INDEX(R, ACTION) \
+    if(rb->read_idx == rb->write_idx){ \
+        ACTION  \
+    }                          \
+    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb); \
+    if(idx>capacity){              \
+        ACTION  \
+    }                          \
+    sdk_size_t size = SDK_RINGBUFFER_SIZE(rb);         \
+    if( idx > size){           \
+        ACTION  \
+    }
+
+
+////////////////////////////////////////////////////////////////////////////////
+////
 int sdk_ringbuffer_init(sdk_ringbuffer_t* rb, void* buffer, sdk_size_t buffer_size, sdk_size_t item_size)
 {
     if((buffer_size-item_size) < item_size){
@@ -80,23 +97,28 @@ void* sdk_ringbuffer_put_slot(sdk_ringbuffer_t* rb)
     return result;
 }
 
+
+
 int sdk_ringbuffer_peek(sdk_ringbuffer_t * rb, sdk_size_t idx, void* item){
-    /* 确保有数据 */
-    if(rb->read_idx == rb->write_idx){
-        return SDK_RINGBUFFER_EINDEX;
-    }
 
-    /* idx 在容量范围内 */
-    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
-    if(idx>capacity){
-        return SDK_RINGBUFFER_EINDEX;
-    }
+    CHECK_INDEX(rb, return SDK_RINGBUFFER_EINDEX;)
 
-    /* idx 在已有数据中 */
-    sdk_size_t size = SDK_RINGBUFFER_SIZE(rb);
-    if( idx >= size){
-        return SDK_RINGBUFFER_EINDEX;
-    }
+//    /* 确保有数据 */
+//    if(rb->read_idx == rb->write_idx){
+//        return SDK_RINGBUFFER_EINDEX;
+//    }
+//
+//    /* idx 在容量范围内 */
+//    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
+//    if(idx>capacity){
+//        return SDK_RINGBUFFER_EINDEX;
+//    }
+//
+//    /* idx 在已有数据中 */
+//    sdk_size_t size = SDK_RINGBUFFER_SIZE(rb);
+//    if( idx > size){
+//        return SDK_RINGBUFFER_EINDEX;
+//    }
 
     sdk_size_t next_read_idx = rb->read_idx + idx;
     if(next_read_idx>capacity){
