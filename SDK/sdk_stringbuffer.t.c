@@ -30,7 +30,24 @@ int main(int argc, char** argv){
     }
 
     unsigned long value = sdk_ringbuffer_strtoul(&sbuf, &idx, 10);
-    printf("Long: %lu, idx=%d, read_idx=%d", value, idx, sbuf.read_idx);
+    printf("Long: %lu, idx=%d, read_idx=%d\n", value, idx, sbuf.read_idx);
+
+    sdk_ringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_BigEndian);
+    sdk_ringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_LittleEndian);
+
+    printf("write_idx:%d, read_idx:%d\n", sbuf.write_idx, sbuf.read_idx);
+
+    sdk_size_t size = sdk_stringbuffer_size(&sbuf);
+    sdk_stringbuffer_advance_read_idx(&sbuf, size-4);
+//    sbuf.read_idx = sbuf.write_idx-4;
+//    for(int i=0; i<sdk_stringbuffer_size(&sbuf); i++){
+//        printf("[%d] %02x\n", i, sdk_stringbuffer_get(&sbuf, i)& 0xff);
+//    }
+
+
+    printf("u16:%x\n", sdk_ringbuffer_read_u16(&sbuf, 0, kSDK_ByteOrder_BigEndian));
+    printf("u16:%x\n", sdk_ringbuffer_read_u16(&sbuf, 2, kSDK_ByteOrder_LittleEndian));
+
     return 0;
 }
 

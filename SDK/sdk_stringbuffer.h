@@ -8,6 +8,11 @@
 #include <sdk_types.h>
 #endif /*INCLUDED_SDK_TYPES_H*/
 
+#ifndef INCLUDED_SDK_BYTEORDER_H
+#include <sdk_byteorder.h>
+#endif /*INCLUDED_SDK_BYTEORDER_H*/
+
+
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -17,6 +22,7 @@ typedef struct sdk_stringbuffer_s{
     sdk_size_t          write_idx;
     sdk_size_t          read_idx;
 }sdk_stringbuffer_t;
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -30,13 +36,20 @@ typedef struct sdk_stringbuffer_s{
 #define SDK_STRINGBUFFER_INVALID_VALUE (0xFFU)
 
 #define SDK_STRINGBUFFER_INVALID_INDEX (-1U)
+
+#define SDK_STRINGBUFFER_READ_U32_EVAL ((uint32_t)(0xFFFFFFFFU))
+#define SDK_STRINGBUFFER_READ_U16_EVAL ((uint16_t)(0xFFFFU))
+
 ////////////////////////////////////////////////////////////////////////////////
 ////
 #define SDK_STRINGBUFFER_SIZE(S)     (((S)->write_idx >= (S)->read_idx) \
     ?((S)->write_idx - (S)->read_idx)                                   \
     :((S)->buffer_size - (S)->read_idx + (S)->write_idx))
 
-#define SDK_RINGBUFFER_CAPACITY(S) (((S)->buffer_size-1) - SDK_STRINGBUFFER_SIZE(S))
+#define SDK_STRINGBUFFER_CAPACITY(S) (((S)->buffer_size-1) - SDK_STRINGBUFFER_SIZE(S))
+
+#define SDK_STRINGBUFFER_AVAILABLE(S) (SDK_STRINGBUFFER_CAPACITY(S)-SDK_STRINGBUFFER_SIZE(S))
+
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -48,6 +61,7 @@ int sdk_stringbuffer_peek(sdk_stringbuffer_t* sbuf, char* item);
 char sdk_stringbuffer_get(sdk_stringbuffer_t* sbuf, sdk_size_t idx);
 
 sdk_size_t sdk_stringbuffer_size(sdk_stringbuffer_t* sbuf);
+sdk_size_t sdk_stringbuffer_capacity(sdk_stringbuffer_t* sbuf);
 
 /* 往前移动读指针. 移动前检查是否会越过 write_idx
  * return:
@@ -63,5 +77,10 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx, cons
 
 unsigned long sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base);
 
+uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
+uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
+
+int sdk_ringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value,sdk_byteorder_t byteorder);
+int sdk_ringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder);
 
 #endif /* INCLUDED_SDK_STRINGBUFFER_H */

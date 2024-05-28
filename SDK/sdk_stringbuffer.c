@@ -55,28 +55,30 @@ int sdk_stringbuffer_peek(sdk_stringbuffer_t* sbuf, char* item)
     return SDK_STRINGBUFFER_OK;
 }
 
+#define CHECK_INDEX(B, ACTION) \
+if((B)->read_idx == (B)->write_idx){ \
+    ACTION \
+}                     \
+if(idx>=(B)->buffer_size){            \
+    ACTION \
+}                     \
+sdk_size_t size = SDK_STRINGBUFFER_SIZE((B)); \
+if( idx > size){      \
+    ACTION \
+}
+
+
 char sdk_stringbuffer_get(sdk_stringbuffer_t* sbuf, sdk_size_t idx)
 {
 
-    if(sbuf->read_idx == sbuf->write_idx){
-        return SDK_STRINGBUFFER_INVALID_VALUE;
-    }
-
-    if(idx>=sbuf->buffer_size){
-        return SDK_STRINGBUFFER_INVALID_VALUE;
-    }
-
-    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
-    if( idx >= size){
-        return SDK_STRINGBUFFER_INVALID_VALUE;
-    }
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_INVALID_VALUE;)
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
     if(next_read_idx>=sbuf->buffer_size){
         next_read_idx =  next_read_idx - sbuf->buffer_size;
     }
     
-    return (char)sbuf->buffer[next_read_idx];
+    return (char)(sbuf->buffer[next_read_idx]);
 }
 
 
@@ -84,6 +86,10 @@ sdk_size_t sdk_stringbuffer_size(sdk_stringbuffer_t * sbuf){
     return SDK_STRINGBUFFER_SIZE(sbuf);
 }
 
+sdk_size_t sdk_stringbuffer_capacity(sdk_stringbuffer_t* sbuf)
+{
+    return SDK_STRINGBUFFER_CAPACITY(sbuf);
+}
 
 /*
  * buffer_size = 6
@@ -93,18 +99,20 @@ sdk_size_t sdk_stringbuffer_size(sdk_stringbuffer_t * sbuf){
  */
 int sdk_stringbuffer_advance_read_idx(sdk_stringbuffer_t * sbuf, sdk_size_t idx)
 {
-    if(sbuf->read_idx == sbuf->write_idx){
-        return SDK_STRINGBUFFER_EMPTY;
-    }
+//    if(sbuf->read_idx == sbuf->write_idx){
+//        return SDK_STRINGBUFFER_EMPTY;
+//    }
+//
+//    if(idx>=sbuf->buffer_size){
+//        return SDK_STRINGBUFFER_EINVAL;
+//    }
+//
+//    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
+//    if( idx > size){
+//        return SDK_STRINGBUFFER_OUTOFBOUNDARY;
+//    }
 
-    if(idx>=sbuf->buffer_size){
-        return SDK_STRINGBUFFER_EINVAL;
-    }
-
-    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
-    if( idx >= size){
-        return SDK_STRINGBUFFER_OUTOFBOUNDARY;
-    }
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_EINVAL;)
 
     sdk_size_t next_read_idx = sbuf->read_idx + idx;
     if(next_read_idx>=sbuf->buffer_size){
@@ -124,18 +132,21 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
     sdk_size_t i;
     sdk_size_t j;
 
-    if(sbuf->read_idx == sbuf->write_idx){
-        return SDK_STRINGBUFFER_INVALID_INDEX;
-    }
+//
+//    if(sbuf->read_idx == sbuf->write_idx){
+//        return SDK_STRINGBUFFER_INVALID_INDEX;
+//    }
+//
+//    if(idx>=sbuf->buffer_size){
+//        return SDK_STRINGBUFFER_INVALID_INDEX;
+//    }
+//
+//    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
+//    if( idx > size){
+//        return SDK_STRINGBUFFER_INVALID_INDEX;
+//    }
 
-    if(idx>=sbuf->buffer_size){
-        return SDK_STRINGBUFFER_INVALID_INDEX;
-    }
-
-    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
-    if( idx >= size){
-        return SDK_STRINGBUFFER_INVALID_INDEX;
-    }
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_INVALID_INDEX;)
 
     if (needle_size > size) {
         return SDK_STRINGBUFFER_INVALID_INDEX;
@@ -290,6 +301,140 @@ sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register 
     return (acc);
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////
 
 
+
+uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
+{
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_READ_U32_EVAL;)
+
+//    /* BUFFER IS EMPTY */
+//    if(sbuf->read_idx == sbuf->write_idx){
+//        return SDK_STRINGBUFFER_READ_U32_EVAL;
+//    }
+//
+//    /* idx 应该在容量范围内 */
+//    if(idx>=sbuf->buffer_size){
+//        return SDK_STRINGBUFFER_READ_U32_EVAL;
+//    }
+//
+//    /* idx 应该在已有数据范围内 */
+//    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
+//    if( (idx+4) > size){
+//        return SDK_STRINGBUFFER_READ_U32_EVAL;
+//    }
+
+    sdk_size_t next_read_idx = sbuf->read_idx + idx;
+    if(next_read_idx>=sbuf->buffer_size){
+        next_read_idx =  next_read_idx - sbuf->buffer_size;
+    }
+
+    uint8_t b0 = sbuf->buffer[next_read_idx];
+    uint8_t b1 = sbuf->buffer[next_read_idx+1];
+    uint8_t b2 = sbuf->buffer[next_read_idx+2];
+    uint8_t b3 = sbuf->buffer[next_read_idx+3];
+
+    if(byteorder==kSDK_ByteOrder_BigEndian){
+        return ((b0<<24)&0xFF000000)
+                | ((b1<<16)&0x00FF0000)
+                | ((b2<<8)&0x0000FF00)
+                | ((b3)&0x000000FF);
+    }else{
+        return ((b3<<24)&0xFF000000)
+               | ((b2<<16)&0x00FF0000)
+               | ((b1<<8)&0x0000FF00)
+               | ((b0)&0x000000FF);
+    }
+}
+
+uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
+{
+    CHECK_INDEX(sbuf, return SDK_STRINGBUFFER_READ_U16_EVAL;)
+
+//    /* BUFFER IS EMPTY */
+//    if(sbuf->read_idx == sbuf->write_idx){
+//        return SDK_STRINGBUFFER_READ_U16_EVAL;
+//    }
+//
+//    /* idx 应该在容量范围内 */
+//    if(idx>=sbuf->buffer_size){
+//        return SDK_STRINGBUFFER_READ_U16_EVAL;
+//    }
+//
+//    /* idx 应该在已有数据范围内 */
+//    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
+//    if( (idx+2) > size){
+//        return SDK_STRINGBUFFER_READ_U16_EVAL;
+//    }
+
+    sdk_size_t next_read_idx = sbuf->read_idx + idx;
+    if(next_read_idx>=sbuf->buffer_size){
+        next_read_idx =  next_read_idx - sbuf->buffer_size;
+    }
+
+    uint8_t b0 = sbuf->buffer[next_read_idx];
+    uint8_t b1 = sbuf->buffer[next_read_idx+1];
+
+    if(byteorder==kSDK_ByteOrder_BigEndian){
+        return ((b0<<8)&0xFF00)
+               | ((b1)&0x00FF);
+    }else{
+        return ((b1<<8)&0xFF00)
+              | ((b0)&0x00FF);
+    }
+}
+
+
+int sdk_ringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value,sdk_byteorder_t byteorder)
+{
+    uint8_t buf[4];
+    if(byteorder==kSDK_ByteOrder_BigEndian){
+        buf[0] = (value & 0xFF000000)>>24;
+        buf[1] = (value & 0x00FF0000)>>16;
+        buf[2] = (value & 0x0000FF00)>>8;
+        buf[3] = (value & 0x000000FF);
+    }else{
+        buf[3] = (value & 0xFF000000)>>24;
+        buf[2] = (value & 0x00FF0000)>>16;
+        buf[1] = (value & 0x0000FF00)>>8;
+        buf[0] = (value & 0x000000FF);
+    }
+
+    sdk_size_t space_size = SDK_STRINGBUFFER_AVAILABLE(sbuf);
+    if(space_size<4){
+        return SDK_STRINGBUFFER_FULL;
+    }
+
+    for(int i=0; i<4; i++){
+        sdk_stringbuffer_put(sbuf, buf[i]);
+    }
+
+    return SDK_STRINGBUFFER_OK;
+}
+
+
+int sdk_ringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder)
+{
+    uint8_t buf[2];
+    if(byteorder==kSDK_ByteOrder_BigEndian){
+        buf[0] = (value & 0xFF00)>>8;
+        buf[1] = (value & 0x00FF);
+    }else{
+        buf[1] = (value & 0xFF00)>>8;
+        buf[0] = (value & 0x00FF);
+    }
+
+    sdk_size_t space_size = SDK_STRINGBUFFER_AVAILABLE(sbuf);
+    if(space_size<2){
+        return SDK_STRINGBUFFER_FULL;
+    }
+
+    for(int i=0; i<2; i++){
+        sdk_stringbuffer_put(sbuf, buf[i]);
+    }
+
+    return SDK_STRINGBUFFER_OK;
+}
 
