@@ -21,13 +21,16 @@ int main(int argc, char** argv){
         printf("[%d] %c \n", i, sdk_stringbuffer_get(&sbuf, i));
     }
 
-    sdk_size_t idx = sdk_stringbuffer_find(&sbuf, "1234", 4);
+    sdk_size_t idx = sdk_stringbuffer_find(&sbuf, 0, "1234", 4);
     printf("find(1234)=%d\n", idx);
 
-    int err = sdk_stringbuffer_advance_read_idx(&sbuf, idx);
-    printf("sdk_stringbuffer_advance_read_idx: code=%d, read_idx=%d\n", err, sbuf.read_idx);
+    if(idx!=SDK_STRINGBUFFER_INVALID_INDEX){
+        int err = sdk_stringbuffer_advance_read_idx(&sbuf, idx);
+        printf("sdk_stringbuffer_advance_read_idx: code=%d, read_idx=%d\n", err, sbuf.read_idx);
+    }
 
     unsigned long value = sdk_ringbuffer_strtoul(&sbuf, &idx, 10);
     printf("Long: %lu, idx=%d, read_idx=%d", value, idx, sbuf.read_idx);
     return 0;
 }
+

@@ -59,7 +59,7 @@ int sdk_stringbuffer_advance_read_idx(sdk_stringbuffer_t * sbuf, sdk_size_t idx)
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Advance Functions
-sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, const char* needle, sdk_size_t needle_size);
+sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx, const char* needle, sdk_size_t needle_size);
 
 unsigned long sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base);
 

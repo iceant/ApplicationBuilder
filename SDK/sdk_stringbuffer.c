@@ -118,22 +118,38 @@ int sdk_stringbuffer_advance_read_idx(sdk_stringbuffer_t * sbuf, sdk_size_t idx)
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf
+sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
         , const char* needle, sdk_size_t needle_size)
 {
     sdk_size_t i;
     sdk_size_t j;
 
+    if(sbuf->read_idx == sbuf->write_idx){
+        return SDK_STRINGBUFFER_INVALID_INDEX;
+    }
+
+    if(idx>=sbuf->buffer_size){
+        return SDK_STRINGBUFFER_INVALID_INDEX;
+    }
+
     sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
+    if( idx >= size){
+        return SDK_STRINGBUFFER_INVALID_INDEX;
+    }
 
     if (needle_size > size) {
         return SDK_STRINGBUFFER_INVALID_INDEX;
     }
 
-    for(i=0; i< size; i++){
-        if(sdk_stringbuffer_get(sbuf, i)==needle[0]){
+    sdk_size_t next_read_idx = sbuf->read_idx + idx;
+    if(next_read_idx>=sbuf->buffer_size){
+        next_read_idx =  next_read_idx - sbuf->buffer_size;
+    }
+
+    for(i=next_read_idx; i< size; i++){
+        if(sbuf->buffer[i]==needle[0]){
             for(j=1; j<needle_size; j++){
-                if(sdk_stringbuffer_get(sbuf, i+j)!=needle[j]){
+                if(sbuf->buffer[i+j]!=needle[j]){
                     break;
                 }
             }
