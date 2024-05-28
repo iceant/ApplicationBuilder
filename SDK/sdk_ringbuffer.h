@@ -21,11 +21,13 @@ typedef struct sdk_ringbuffer_s{
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-#define SDK_RINGBUFFER_OK           (0x00 )
-#define SDK_RINGBUFFER_FULL         (-0x10)
-#define SDK_RINGBUFFER_EMPTY        (-0x11)
-#define SDK_RINGBUFFER_EBUFSIZE     (-0x12)
-#define SDK_RINGBUFFER_EINDEX       (-0x13)
+#define SDK_RINGBUFFER_OK               (0x00 )
+#define SDK_RINGBUFFER_FULL             (-0x10)
+#define SDK_RINGBUFFER_EMPTY            (-0x11)
+#define SDK_RINGBUFFER_EBUFSIZE         (-0x12)
+#define SDK_RINGBUFFER_EINDEX           (-0x13)
+#define SDK_RINGBUFFER_EINVAL           (-0x14)
+#define SDK_RINGBUFFER_OUTOFBOUNDARY    (-0x15)
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -57,5 +59,14 @@ int sdk_ringbuffer_pop(sdk_ringbuffer_t* rb, void* item);
 void* sdk_ringbuffer_put_slot(sdk_ringbuffer_t* rb);
 
 int sdk_ringbuffer_peek(sdk_ringbuffer_t * rb, sdk_size_t idx, void* item);
+
+
+/* 往前移动读指针. 移动前检查是否会越过 write_idx
+ * return:
+ *      SDK_RINGBUFFER_EINVAL:             当 idx<0 || idx >=sbuf->buffer_size
+ *      SDK_RINGBUFFER_OUTOFBOUNDARY:      当 idx >= SDK_RINGBUFFER_SIZE(sbuf)
+ * */
+int sdk_ringbuffer_advance_read_idx(sdk_ringbuffer_t * rb, sdk_size_t idx);
+
 
 #endif /* INCLUDED_SDK_RINGBUFFER_H */

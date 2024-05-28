@@ -129,3 +129,16 @@ int sdk_ringbuffer_peek(sdk_ringbuffer_t * rb, sdk_size_t idx, void* item){
 
     return SDK_RINGBUFFER_OK;
 }
+
+int sdk_ringbuffer_advance_read_idx(sdk_ringbuffer_t * rb, sdk_size_t idx)
+{
+    CHECK_INDEX(rb, idx, return SDK_RINGBUFFER_EINVAL;)
+
+    sdk_size_t next_read_idx = rb->read_idx + idx;
+    if(next_read_idx>=rb->buffer_size){
+        next_read_idx =  next_read_idx - rb->buffer_size;
+    }
+    rb->read_idx = next_read_idx;
+
+    return SDK_RINGBUFFER_OK;
+}

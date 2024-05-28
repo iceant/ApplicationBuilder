@@ -32,6 +32,10 @@ int main(int argc, char** argv)
     }
 
     printf("size(used): %d\n", sdk_ringbuffer_size(&rbuf));
+    printf("capacity: %d\n", SDK_RINGBUFFER_CAPACITY(&rbuf));
+    printf("available: %d\n", SDK_RINGBUFFER_AVAILABLE(&rbuf));
+
+    sdk_ringbuffer_advance_read_idx(&rbuf, 5);
 
     for(int i=0; i<sdk_ringbuffer_size(&rbuf); i++){
         object_t p;
