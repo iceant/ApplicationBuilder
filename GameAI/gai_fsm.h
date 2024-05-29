@@ -13,9 +13,6 @@
 #include <gai_evaluator.h>
 #endif /*INCLUDED_GAI_EVALUATOR_H*/
 
-#ifndef INCLUDED_SDK_VECTOR_H
-#include <sdk_vector.h>
-#endif /*INCLUDED_SDK_VECTOR_H*/
 
 #ifndef INCLUDED_SDK_LIST_H
 #include <sdk_list.h>
