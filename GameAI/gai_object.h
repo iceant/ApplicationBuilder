@@ -27,6 +27,9 @@ typedef enum gai_object_type_enum{
     kGAI_ObjectType_FSM_State,
     kGAI_ObjectType_FSM_Transition,
     kGAI_ObjectType_FSM_Machine,
+    kGAI_ObjectType_BehaviorTreeNode,
+    kGAI_ObjectType_BehaviorTree,
+    
 }gai_object_type_t;
 
 typedef struct gai_object_s{

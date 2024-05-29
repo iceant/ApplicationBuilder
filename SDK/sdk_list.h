@@ -134,7 +134,7 @@ do{                                  \
     }                       \
   }while (0)
 
-
-
+#define SDK_LIST_FOREACH(ITEM, L) \
+    for(ITEM = SDK_LIST_HEAD(L); ITEM!=(L); ITEM= SDK_LIST_NEXT(ITEM))
 
 #endif /* INCLUDED_SDK_LIST_H */
