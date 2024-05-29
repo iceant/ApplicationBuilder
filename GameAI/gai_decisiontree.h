@@ -16,11 +16,9 @@
 #include <gai_evaluator.h>
 #endif /*INCLUDED_GAI_EVALUATOR_H*/
 
-#ifndef INCLUDED_SDK_VECTOR_H
-#include <sdk_vector.h>
-#endif /*INCLUDED_SDK_VECTOR_H*/
-
-
+#ifndef INCLUDED_SDK_LIST_H
+#include <sdk_list.h>
+#endif /*INCLUDED_SDK_LIST_H*/
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -36,7 +34,8 @@ typedef enum gai_decision_tree_node_type_enum{
 struct gai_decision_tree_node_s{
     gai_object_t object;
     gai_decision_tree_node_type_t type;
-    sdk_vector_t children;
+    sdk_list_t children_list;
+    sdk_list_node_t child_node;
     gai_evaluator_t* evaluator;
     gai_action_t * action;
 };
@@ -56,8 +55,6 @@ struct gai_decision_tree_s{
 ////
 
 gai_err_t gai_decision_tree_node_init(gai_decision_tree_node_t* node, const char* name, gai_decision_tree_node_type_t type, void* userdata);
-
-void gai_decision_tree_node_destroy(gai_decision_tree_node_t* node);
 
 gai_err_t gai_decision_tree_node_add_child(gai_decision_tree_node_t* node, gai_decision_tree_node_t * child);
 

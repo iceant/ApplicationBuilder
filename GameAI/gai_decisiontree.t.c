@@ -57,12 +57,7 @@ int main(int argc, char** argv)
         gai_decision_tree_update(&tree, 0);
         Sleep(1000);
     }
-    
-    
-    gai_decision_tree_node_destroy(&isAliveBranch);
-    gai_decision_tree_node_destroy(&criticalBranch);
-    gai_decision_tree_node_destroy(&dieActionNode);
-    
+
     
     return 0;
 }
