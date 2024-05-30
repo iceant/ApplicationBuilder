@@ -3,60 +3,96 @@
 #include <stdlib.h>
 #include "sdk_macros.h"
 
+static void sdk_value_char_print(sdk_value_t *value){
+    if(value->spec.type.value_type==kSDK_ValueType_Char){
+        printf("%c", value->value.char_value);
+    }
+}
+
+static void sdk_value_integer_print(sdk_value_t * value){
+    if(value->spec.type.value_type==kSDK_ValueType_Integer){
+        printf("%d", value->value.integer_value);
+    }
+}
+
+static void sdk_value_double_print(sdk_value_t * value){
+    if(value->spec.type.value_type==kSDK_ValueType_Double){
+        printf("%f", value->value.double_value);
+    }
+}
+
+static void sdk_value_bool_print(sdk_value_t * value){
+    if(value->spec.type.value_type==kSDK_ValueType_Boolean){
+        printf("%s", value->value.bool_value?"T":"F");
+    }
+}
+
+static void sdk_value_string_print(sdk_value_t * value){
+    if(value->spec.type.value_type==kSDK_ValueType_String){
+        printf("%s", value->value.string_value);
+    }
+}
+
+static void sdk_value_array_print(sdk_value_t * value){
+    if(value->spec.type.value_type==kSDK_ValueType_Array){
+        for(int i=0; i<value->spec.type.array_type.array_size; i++){
+            switch (value->spec.type.array_type.item_type) {
+                case kSDK_ValueType_Char: {
+                    char v = ((char *) value->value.array_value)[i];
+                    printf("%c ", v);
+                    break;
+                }
+                case kSDK_ValueType_Integer:{
+                    int v = ((int*)value->value.array_value)[i];
+                    printf("%d ", v);
+                    break;
+                }
+                case kSDK_ValueType_Double:{
+                    double v = ((double *)value->value.array_value)[i];
+                    printf("%f ", v);
+                    break;
+                }
+                case kSDK_ValueType_Boolean:{
+                    bool v = ((bool *)value->value.array_value)[i];
+                    printf("%d ", v);
+                    break;
+                }
+                case kSDK_ValueType_String:{
+                    char* v = ((char **)value->value.array_value)[i];
+                    printf("%s,", v);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+    }
+}
+
 void sdk_value_print(sdk_value_t * value){
     switch (value->spec.type.value_type) {
         case kSDK_ValueType_Char:{
-            printf("%c", value->value.char_value);
+            sdk_value_char_print(value);
             break;
         }
         case kSDK_ValueType_Integer:{
-            printf("%d", value->value.integer_value);
+            sdk_value_integer_print(value);
             break;
         }
         case kSDK_ValueType_Double:{
-            printf("%f", value->value.double_value);
+            sdk_value_double_print(value);
             break;
         }
         case kSDK_ValueType_Boolean:{
-            printf("%d", value->value.bool_value);
+            sdk_value_bool_print(value);
             break;
         }
         case kSDK_ValueType_String:{
-            printf("%s", value->value.string_value);
+            sdk_value_string_print(value);
             break;
         }
         case kSDK_ValueType_Array:{
-            for(int i=0; i<value->spec.type.array_type.array_size; i++){
-
-                switch (value->spec.type.array_type.item_type) {
-                    case kSDK_ValueType_Char:{
-                        char v = ((char*)value->value.array_value)[i];
-                        printf("%c ", v);
-                        break;
-                    }
-                    case kSDK_ValueType_Integer:{
-                        int v = ((int*)value->value.array_value)[i];
-                        printf("%d ", v);
-                        break;
-                    }
-                    case kSDK_ValueType_Double:{
-                        double v = ((double *)value->value.array_value)[i];
-                        printf("%f ", v);
-                        break;
-                    }
-                    case kSDK_ValueType_Boolean:{
-                        bool v = ((bool *)value->value.array_value)[i];
-                        printf("%d ", v);
-                        break;
-                    }
-                    case kSDK_ValueType_String:{
-                        char* v = ((char **)value->value.array_value)[i];
-                        printf("%s,", v);
-                        break;
-                    }
-                }
-            }
-
+            sdk_value_array_print(value);
             break;
         }
         default:{

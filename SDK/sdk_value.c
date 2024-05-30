@@ -55,10 +55,10 @@ void sdk_value_object(sdk_value_t *value, void* object, sdk_size_t object_size, 
 {
     assert(value);
 
-    value->value.struct_value = object;
-    value->spec.type.struct_type.value_type = kSDK_ValueType_Struct;
-    value->spec.type.struct_type.object_type = object_type;
-    value->spec.type.struct_type.object_size = object_size;
+    value->value.object_value = object;
+    value->spec.type.object_type.value_type = kSDK_ValueType_Object;
+    value->spec.type.object_type.object_type = object_type;
+    value->spec.type.object_type.object_size = object_size;
 }
 
 

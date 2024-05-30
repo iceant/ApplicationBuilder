@@ -23,7 +23,7 @@ typedef enum sdk_value_type_enum{
     kSDK_ValueType_Boolean,
     kSDK_ValueType_String,
     kSDK_ValueType_Array,
-    kSDK_ValueType_Struct,
+    kSDK_ValueType_Object,
 }sdk_value_type_t;
 
 typedef struct sdk_array_spec_s{
@@ -32,17 +32,17 @@ typedef struct sdk_array_spec_s{
     sdk_size_t          array_size;
 }sdk_array_spec_t;
 
-typedef struct sdk_struct_spec_s{
-    sdk_value_type_t    value_type; /* kSDK_ValueType_Struct */
+typedef struct sdk_object_spec_s{
+    sdk_value_type_t    value_type; /* kSDK_ValueType_Object */
     int                 object_type;
     sdk_size_t          object_size;
-}sdk_struct_spec_t;
+}sdk_object_spec_t;
 
 typedef struct sdk_value_spec_s{
     union {
         sdk_value_type_t value_type;
         sdk_array_spec_t array_type;
-        sdk_struct_spec_t struct_type;
+        sdk_object_spec_t object_type;
     }type;
 }sdk_value_spec_t;
 
@@ -55,7 +55,7 @@ struct sdk_value_s{
         bool    bool_value;
         char*   string_value;
         void*   array_value;
-        void*   struct_value;
+        void*   object_value;
     }value;
 };
 
