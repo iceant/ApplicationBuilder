@@ -126,14 +126,15 @@ sdk_err_t sdk_vector_remove(sdk_vector_t* vector, sdk_size_t idx)
 
 sdk_err_t sdk_vector_resize_remove(sdk_vector_t * vector, sdk_size_t idx)
 {
-    if(!vector) return SDK_VECTOR_EINVAL;
+    assert(vector);
+
     if(idx>=vector->size){
         return SDK_VECTOR_EINVAL;
     }
     
     sdk_size_t i;
-    for(i=idx; i<vector->size; i++){
-        vector->items[i] = NULL;
+    for(i=idx; i<vector->size-1; i++){
+        vector->items[i] = vector->items[i+1];
     }
     vector->items[i] = NULL;
     --vector->size;

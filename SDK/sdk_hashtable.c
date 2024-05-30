@@ -270,7 +270,7 @@ sdk_err_t sdk_hashtable_remove(sdk_hashtable_t * htable, const void* key)
         }
     }
 
-    if(htable->size == htable->capacity/4){
+    if(htable->size == htable->capacity && htable->capacity>2){
         sdk_err_t  err = sdk_hashtable__resize(htable, htable->capacity/2);
         if(err!=SDK_EOK){
             return err;

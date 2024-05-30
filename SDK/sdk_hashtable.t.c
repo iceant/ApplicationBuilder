@@ -24,6 +24,38 @@ int main(int argc, char** argv){
 
     printf("num col: %d\n", sdk_hashtable_numcol(&htable));
     printf("capacity: %d, size:%d\n", htable.capacity, htable.size);
+
+    sdk_hashtable_remove(&htable, "Key-3");
+    sdk_hashtable_remove(&htable, "Key-5");
+    sdk_hashtable_remove(&htable, "Key-7");
+    sdk_hashtable_remove(&htable, "Key-9");
+    sdk_hashtable_remove(&htable, "Key-0");
+
+    sdk_hashtable_foreach(&htable, node_print, 0);
+
+    printf("num col: %d\n", sdk_hashtable_numcol(&htable));
+    printf("capacity: %d, size:%d\n", htable.capacity, htable.size);
+
+    sdk_hashtable_remove(&htable, "Key-2");
+    sdk_hashtable_remove(&htable, "Key-4");
+
+    sdk_hashtable_foreach(&htable, node_print, 0);
+
+    printf("num col: %d\n", sdk_hashtable_numcol(&htable));
+    printf("capacity: %d, size:%d\n", htable.capacity, htable.size);
+
+
+    for(int i=0; i<10; i++){
+        snprintf(k_buf, sizeof(k_buf), "Key-%d", i);
+        snprintf(v_buf, sizeof(v_buf), "Val-%d", i);
+        sdk_hashtable_put(&htable, k_buf, v_buf);
+    }
+
+    sdk_hashtable_foreach(&htable, node_print, 0);
+
+    printf("num col: %d\n", sdk_hashtable_numcol(&htable));
+    printf("capacity: %d, size:%d\n", htable.capacity, htable.size);
+
     sdk_hashtable_destroy(&htable);
 
     return 0;
