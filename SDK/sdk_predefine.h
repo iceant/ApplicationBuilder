@@ -15,6 +15,8 @@
     #endif
 #endif
 
-
+#ifndef SDK_OBJECT_NAME_SIZE
+    #define SDK_OBJECT_NAME_SIZE 32
+#endif
 
 #endif /* INCLUDED_SDK_PREDEFINE_H */

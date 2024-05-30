@@ -1,4 +1,4 @@
-#include <wui_main.h>
+#include <wui_main.t.h>
 #include <wui_window.h>
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +110,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
         TranslateMessage(&Msg);
         DispatchMessage(&Msg);
     }
-
+    
+    wui_window_destroy(&MainFrame);
+    
     return Msg.wParam;
 }
 

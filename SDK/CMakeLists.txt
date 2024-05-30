@@ -13,7 +13,7 @@ add_subdirectory(../Public/TLSF-2.4.6 ${CMAKE_CURRENT_BINARY_DIR}/TLSF)
 #### PROJECT SOURCES
 
 file(GLOB SOURCES *.c)
-list(FILTER SOURCES EXCLUDE REGEX .t.c)
+list(FILTER SOURCES EXCLUDE REGEX \\.t\\.c)
 foreach (item IN LISTS SOURCES)
     message(STATUS "[${PROJECT_NAME}] SOURCE: ${item}")
 endforeach ()

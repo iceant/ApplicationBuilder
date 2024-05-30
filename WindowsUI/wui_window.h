@@ -15,6 +15,10 @@
 #include <wui_hash.h>
 #endif /*INCLUDED_WUI_HASH_H*/
 
+#ifndef INCLUDED_SDK_HASHTABLE_H
+#include <sdk_hashtable.h>
+#endif /*INCLUDED_SDK_HASHTABLE_H*/
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -25,8 +29,78 @@ typedef struct wui_window_s{
     WNDPROC wndproc;
     HWND hwnd;
     char className[WUI_NAME_SIZE];
-    wui_window_message_handler_t messageHandlerTable[UINT16_MAX];
+    sdk_hashtable_t messageHandlerTable;
 }wui_window_t;
+
+////////////////////////////////////////////////////////////////////////////////
+////
+
+typedef struct wui_window_on_char_s{
+    HWND hwnd;
+    UINT ch;
+    int cRepeat;
+}wui_window_on_char_t;
+#define WUI_WM_CHAR_MSG(hwnd, message, wParam, lParam) \
+    {hwnd, (TCHAR)(wParam), (int)(short)LOWORD(lParam)}
+
+
+typedef struct wui_window_on_key_s{
+    HWND hwnd;
+    UINT vk;
+    BOOL fDown;
+    int cRepeat;
+    UINT flags;
+}wui_window_on_key_t;
+
+#define WUI_WM_KEY_MSG(hwnd, message, wParam, lParam) \
+    {hwnd, (UINT)(wParam),(message==WM_KEYDOWN)?TRUE:FALSE,(int)(short)LOWORD(lParam),(UINT)HIWORD(lParam)}
+
+
+typedef struct wui_window_on_lbuttondown_s{
+    HWND hwnd;
+    BOOL fDoubleClick;
+    int x;
+    int y;
+    UINT keyFlags;
+}wui_window_on_lbuttondown_t;
+
+#define WUI_WM_LBUTTONDOWN_MSG(hwnd, message, wParam, lParam) \
+    {(hwnd),(WM_LBUTTONDBLCLK==message),(int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam),(UINT)(wParam)}
+
+
+typedef struct wui_window_on_lbuttonup_s{
+    HWND hwnd;
+    int x;
+    int y;
+    UINT keyFlags;
+}wui_window_on_lbuttonup_t;
+
+#define WUI_WM_LBUTTONUP_MSG(hwnd, message, wParam, lParam) \
+    {(hwnd),(int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam),(UINT)(wParam)}
+
+
+typedef struct wui_window_on_mousemove_s{
+    HWND hwnd;
+    int x;
+    int y;
+    UINT keyFlags;
+}wui_window_on_mousemove_t;
+
+#define WUI_WM_MOUSEMOVE_MSG(hwnd, message, wParam, lParam) \
+    {(hwnd),(int)(short)LOWORD(lParam),(int)(short)HIWORD(lParam),(UINT)(wParam)}
+
+
+typedef struct wui_window_on_syskey_s{
+    HWND hwnd;
+    UINT vk;
+    BOOL fDown;
+    int cRepeat;
+    UINT flags;
+}wui_window_on_syskey_t;
+
+#define WUI_WM_SYSKEY_MSG(hwnd, message, wParam, lParam) \
+    {hwnd, (UINT)(wParam),(message==WM_SYSKEYDOWN)?TRUE:FALSE,(int)(short)LOWORD(lParam),(UINT)HIWORD(lParam)}
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////

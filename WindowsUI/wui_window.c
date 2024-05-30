@@ -17,7 +17,7 @@ SDK_C_CONSTRUCTOR(wui_window__module_init){
 static LRESULT CALLBACK wui_window__wndproc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam){
     wui_window_t* window = sdk_hashtable_get(&wui_window__instances, hwnd);
     if(window){
-        wui_window_message_handler_t handler = window->messageHandlerTable[message];
+        wui_window_message_handler_t handler = sdk_hashtable_get(&window->messageHandlerTable, (const void*)message);
         if(handler){
             return handler(hwnd, message, wParam, lParam);
         }
@@ -58,10 +58,9 @@ wui_err_t wui_window_init(wui_window_t* window, const char* name, HINSTANCE hIns
     window->hInstance = hInstance;
     window->wndproc = (WndProc==0)?wui_window__wndproc:WndProc;
     window->hwnd = 0;
-
-    for(uint16_t i=0; i< WUI_ARRAY_SIZE(window->messageHandlerTable); i++){
-        window->messageHandlerTable[i] = 0;
-    }
+    
+    sdk_hashtable_init(&window->messageHandlerTable, 10, wui_hash_uint_key_ops, wui_hash_uintptr_val_ops);
+    
     wui_window_register_message_handler(window, WM_DESTROY, wui_window__destroy, 0);
 
     if(name){
@@ -113,12 +112,15 @@ wui_err_t wui_window_register_message_handler(wui_window_t * window, uint16_t co
         , wui_window_message_handler_t* old_handler)
 {
     assert(window);
+    
+    wui_window_message_handler_t old_msg_handler = sdk_hashtable_get(&window->messageHandlerTable, (const void*)code);
+    
+    sdk_hashtable_put(&window->messageHandlerTable, (const void*)code, handler);
 
     if(old_handler){
-        *old_handler = window->messageHandlerTable[code];
+        *old_handler = old_msg_handler;
     }
-    window->messageHandlerTable[code] = handler;
-
+    
     return WUI_EOK;
 }
 

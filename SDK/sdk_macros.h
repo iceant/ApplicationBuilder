@@ -4,7 +4,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-#define SDK_ARRAY_SIZE(ARRAY) (sizeof(ARRAY)/sizeof((ARRAY)[0]))
+#define SDK_ARRAY_SIZE(A) (sizeof(A)/sizeof((A)[0]))
 
 #define SDK_MIN(a, b) ((a)>(b)?(b):(a))
 #define SDK_MAX(a, b) ((a)>(b)?(a):(b))
