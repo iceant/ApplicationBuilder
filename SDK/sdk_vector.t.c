@@ -25,6 +25,10 @@ int main(int argc, char** argv) {
         printf("[%d] %d\n", i, (int)sdk_vector_get(&v, i));
     }
 
+    while(v.size){
+        sdk_vector_resize_remove(&v, 0);
+        printf("vector.size=%d, capacity=%d\n", v.size, v.capacity);
+    }
     
     sdk_vector_destroy(&v);
     

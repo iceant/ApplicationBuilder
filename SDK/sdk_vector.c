@@ -77,6 +77,8 @@ sdk_err_t sdk_vector_resize(sdk_vector_t* vector, sdk_size_t new_capacity){
         if(vector->size > new_capacity){
             vector->size = new_capacity;
         }
+        SDK_FREE(vector->items);
+        vector->items = items;
     }
     
     vector->capacity = new_capacity;
