@@ -69,47 +69,41 @@ void sdk_value_print(sdk_value_t * value){
 int main(int argc, char** argv){
     sdk_value_t value;
 
-    value.spec.type.value_type=kSDK_ValueType_Char;
-    value.value.char_value='a';
+    sdk_value_char(&value, 'a');
     sdk_value_print(&value);
     printf("\n");
 
-    value.spec.type.value_type=kSDK_ValueType_Integer;
-    value.value.integer_value=12;
+    sdk_value_integer(&value, 12);
     sdk_value_print(&value);
     printf("\n");
 
-    value.spec.type.value_type=kSDK_ValueType_Double;
-    value.value.double_value=3.1415926;
+    sdk_value_double(&value, 3.1415926f);
     sdk_value_print(&value);
     printf("\n");
 
-    value.spec.type.value_type=kSDK_ValueType_Boolean;
-    value.value.bool_value=false;
+    sdk_value_boolean(&value, true);
     sdk_value_print(&value);
     printf("\n");
 
-    value.spec.type.value_type=kSDK_ValueType_Boolean;
-    value.value.bool_value=true;
+    sdk_value_boolean(&value, false);
     sdk_value_print(&value);
     printf("\n");
 
 
-    value.spec.type.value_type=kSDK_ValueType_String;
-    value.value.string_value="Hello,StringValue!";
+    sdk_value_string(&value, "Hello, String Value!");
     sdk_value_print(&value);
     printf("\n");
 
 
     int int_array[]={1,2,3};
-    value.spec.type.array_type.value_type=kSDK_ValueType_Array;
-    value.spec.type.array_type.item_type=kSDK_ValueType_Integer;
-    value.spec.type.array_type.array_size=SDK_ARRAY_SIZE(int_array);
-    value.value.array_value=&int_array;
+    sdk_value_array(&value, int_array, SDK_ARRAY_SIZE(int_array), kSDK_ValueType_Integer);
     sdk_value_print(&value);
     printf("\n");
 
 
-
+    char char_array[]={'A','x','$'};
+    sdk_value_array(&value, char_array, SDK_ARRAY_SIZE(char_array), kSDK_ValueType_Char);
+    sdk_value_print(&value);
+    printf("\n");
     return 0;
 }

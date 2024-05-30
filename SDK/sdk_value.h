@@ -34,8 +34,8 @@ typedef struct sdk_array_spec_s{
 
 typedef struct sdk_struct_spec_s{
     sdk_value_type_t    value_type; /* kSDK_ValueType_Struct */
-    int                 struct_type;
-    sdk_size_t          array_size;
+    int                 object_type;
+    sdk_size_t          object_size;
 }sdk_struct_spec_t;
 
 typedef struct sdk_value_spec_s{
@@ -63,7 +63,13 @@ struct sdk_value_s{
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-
+void sdk_value_char(sdk_value_t *value, char v);
+void sdk_value_integer(sdk_value_t *value, int v);
+void sdk_value_double(sdk_value_t *value, double v);
+void sdk_value_boolean(sdk_value_t *value, bool v);
+void sdk_value_string(sdk_value_t *value, char* v);
+void sdk_value_array(sdk_value_t *value, void** array, sdk_size_t size, sdk_value_type_t item_type);
+void sdk_value_object(sdk_value_t *value, void* object, sdk_size_t object_size, int object_type);
 
 
 #endif /*INCLUDED_SDK_VALUE_H*/
