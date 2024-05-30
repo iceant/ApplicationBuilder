@@ -1,5 +1,7 @@
 #include <sdk_vector.h>
 #include <sdk_memory.h>
+#include <assert.h>
+#include <string.h>
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -67,19 +69,14 @@ sdk_err_t sdk_vector_resize(sdk_vector_t* vector, sdk_size_t new_capacity){
     if(new_capacity==0){
         SDK_FREE(vector->items);
         vector->size = 0;
-    }else if(vector->capacity > new_capacity){
-        SDK_RESIZE(vector->items, ELEMENT_SIZE * new_capacity);
-        if(!vector->items){
-            return SDK_VECTOR_NOMEM;
-        }
-        vector->size = new_capacity;
+    }else if(vector->capacity==0){
+        vector->items = SDK_ALLOC(ELEMENT_SIZE * new_capacity);
     }else{
-        void* items = SDK_ALLOC(ELEMENT_SIZE * new_capacity);
-        if(!items){
-            return SDK_VECTOR_NOMEM;
+        void** items = SDK_ALLOC(ELEMENT_SIZE * new_capacity);
+        memcpy(items, vector->items, ELEMENT_SIZE * vector->size);
+        if(vector->size > new_capacity){
+            vector->size = new_capacity;
         }
-        SDK_FREE(vector->items);
-        vector->items = items;
     }
     
     vector->capacity = new_capacity;
@@ -89,7 +86,7 @@ sdk_err_t sdk_vector_resize(sdk_vector_t* vector, sdk_size_t new_capacity){
 
 sdk_err_t sdk_vector_resize_add(sdk_vector_t* vector, void* item)
 {
-    if(!vector) return SDK_VECTOR_EINVAL;
+    assert(vector);
     
     sdk_err_t err=SDK_VECTOR_OK;
     

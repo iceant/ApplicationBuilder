@@ -23,6 +23,7 @@ typedef sdk_int_t sdk_err_t;
 #define SDK_EFULL       (-5)
 #define SDK_EEMPTY      (-6)
 #define SDK_ETIMEOUT    (-7)
+#define SDK_ENONE       (-8)
 
 
 
