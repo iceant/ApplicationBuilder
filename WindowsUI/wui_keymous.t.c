@@ -256,9 +256,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     
     wui_window_icon_set(&MainFrame, LoadIcon(NULL, IDI_QUESTION));
     wui_window_cursor_set(&MainFrame, LoadCursor(NULL, IDC_HAND));
-
     wui_window_background_set(&MainFrame, BackgroundColor);
-  
+
     
     if(wui_window_show(&MainFrame, nCmdShow)!=WUI_EOK){
         return FALSE;
