@@ -11,7 +11,7 @@ char Directions[100];
 static LRESULT wui_main__on_create(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam){
     LPCREATESTRUCT lpCreateStruct = (LPCREATESTRUCT)(lParam);
     strcpy(Directions, "Try resizing this window");
-    HBRUSH brush = CreateSolidBrush(RGB(0, 0, 255));
+    HBRUSH brush = CreateSolidBrush(RGB(0xE3, 0xE3, 0xE3));
     SetClassLongPtr(hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)brush);
 
 
@@ -100,7 +100,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     wui_window_register_message_handler(&MainFrame, WM_DESTROY, wui_main__on_destroy, 0);
     wui_window_register_message_handler(&MainFrame, WM_SHOWWINDOW, wui_main__on_create, 0);
 
-    wui_window_create(&MainFrame);
+    wui_window_create(&MainFrame, CW_USEDEFAULT, CW_USEDEFAULT, 800, 600);
 
     if(wui_window_show(&MainFrame, nCmdShow)!=WUI_EOK){
         return FALSE;
