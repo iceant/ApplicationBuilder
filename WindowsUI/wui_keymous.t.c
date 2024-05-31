@@ -8,6 +8,7 @@
 static wui_window_t MainFrame;
 static int XVal = 10;
 static int YVal = 30;
+static HBRUSH BackgroundColor=0;
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -203,7 +204,22 @@ static LRESULT MainFrame_OnSysKey(HWND hwnd, UINT message, WPARAM wParam, LPARAM
     return WUI_WINDOW_SUCCESS;
 }
 
+static LRESULT MainFrame_OnShow(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if(!BackgroundColor){
+        BackgroundColor = CreateSolidBrush(RGB(60, 60, 60));
+    }
+    return WUI_WINDOW_SUCCESS;
+}
 
+static LRESULT MainFrame_OnDestroy(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    if(BackgroundColor){
+        DeleteObject(BackgroundColor);
+    }
+    PostQuitMessage(0);
+    return WUI_WINDOW_SUCCESS;
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -217,6 +233,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
             return FALSE;
         }
     }
+    wui_window_style_set(&MainFrame, CS_DBLCLKS);
+    
+    if(!BackgroundColor){
+        BackgroundColor = CreateSolidBrush(RGB(125, 125, 125));
+    }
     
     wui_window_register_message_handler(&MainFrame, WM_CHAR, MainFrame_OnChar, 0);
     wui_window_register_message_handler(&MainFrame, WM_KEYDOWN, MainFrame_OnKey, 0);
@@ -228,12 +249,21 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     wui_window_register_message_handler(&MainFrame, WM_PAINT, MainFrame_OnPaint, 0);
     wui_window_register_message_handler(&MainFrame, WM_SYSKEYUP, MainFrame_OnSysKey, 0);
     wui_window_register_message_handler(&MainFrame, WM_SYSKEYDOWN, MainFrame_OnSysKey, 0);
+    wui_window_register_message_handler(&MainFrame, WM_SHOWWINDOW, MainFrame_OnShow, 0);
+    wui_window_register_message_handler(&MainFrame, WM_DESTROY, MainFrame_OnDestroy, 0);
     
     wui_window_create(&MainFrame);
+    
+    wui_window_icon_set(&MainFrame, LoadIcon(NULL, IDI_ERROR));
+    wui_window_cursor_set(&MainFrame, LoadCursor(NULL, IDC_HAND));
+
+    wui_window_background_set(&MainFrame, BackgroundColor);
+  
     
     if(wui_window_show(&MainFrame, nCmdShow)!=WUI_EOK){
         return FALSE;
     }
+
     
     while(GetMessage(&Msg, NULL, 0, 0)){
         TranslateMessage(&Msg);

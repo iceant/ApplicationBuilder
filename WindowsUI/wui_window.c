@@ -2,6 +2,7 @@
 #include <wui_macros.h>
 #include <assert.h>
 #include <sdk_hashtable.h>
+#include <strsafe.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -27,19 +28,26 @@ static LRESULT CALLBACK wui_window__wndproc(HWND hwnd, UINT message, WPARAM wPar
 
 static BOOL wui_window__register(HINSTANCE hInstance, const char* name, WNDPROC WndProc)
 {
-    WNDCLASS WndClass;
-    WndClass.style = CS_HREDRAW|CS_VREDRAW;
+    WNDCLASSEX WndClass;
+    WndClass.style = CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS;
     WndClass.lpfnWndProc = WndProc;
     WndClass.cbClsExtra = 0;
     WndClass.cbWndExtra = 0;
     WndClass.hInstance = hInstance;
     WndClass.hIcon = LoadIcon(NULL, IDI_APPLICATION);
     WndClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    WndClass.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
+    WndClass.hbrBackground = GetStockObject(WHITE_BRUSH);
     WndClass.lpszMenuName = NULL;
     WndClass.lpszClassName = name;
+    WndClass.cbSize = sizeof(WndClass);
+    WndClass.hIconSm = LoadImage(hInstance, // small class icon
+                                 MAKEINTRESOURCE(5),
+                                 IMAGE_ICON,
+                                 GetSystemMetrics(SM_CXSMICON),
+                                 GetSystemMetrics(SM_CYSMICON),
+                                 LR_DEFAULTCOLOR);
 
-    return RegisterClass(&WndClass)!=0;
+    return RegisterClassEx(&WndClass)!=0;
 }
 
 
@@ -49,8 +57,73 @@ static LRESULT wui_window__destroy(HWND hwnd, UINT message, WPARAM wParam, LPARA
     return 0;
 }
 
+static void wui_window__error_exit(LPCTSTR lpszFunction)
+{
+    // Retrieve the system error message for the last-error code
+    
+    LPVOID lpMsgBuf;
+    LPVOID lpDisplayBuf;
+    DWORD dw = GetLastError();
+    
+    FormatMessage(
+            FORMAT_MESSAGE_ALLOCATE_BUFFER |
+            FORMAT_MESSAGE_FROM_SYSTEM |
+            FORMAT_MESSAGE_IGNORE_INSERTS,
+            NULL,
+            dw,
+            MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+            (LPTSTR) &lpMsgBuf,
+            0, NULL );
+    
+    // Display the error message and exit the process
+    
+    lpDisplayBuf = (LPVOID)LocalAlloc(LMEM_ZEROINIT,
+                                      (lstrlen((LPCTSTR)lpMsgBuf) + lstrlen((LPCTSTR)lpszFunction) + 40) * sizeof(TCHAR));
+    StringCchPrintf((LPTSTR)lpDisplayBuf,
+                    LocalSize(lpDisplayBuf) / sizeof(TCHAR),
+                    TEXT("%s failed with error %d: %s"),
+                    lpszFunction, dw, lpMsgBuf);
+    MessageBox(NULL, (LPCTSTR)lpDisplayBuf, TEXT("Error"), MB_OK);
+    
+    LocalFree(lpMsgBuf);
+    LocalFree(lpDisplayBuf);
+    ExitProcess(dw);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 ////
+
+wui_err_t wui_window_background_set(wui_window_t* window, HBRUSH background)
+{
+    if(window->hwnd){
+        SetClassLongPtr(window->hwnd, GCLP_HBRBACKGROUND, (LONG_PTR)background);
+    }
+    return WUI_EOK;
+}
+
+wui_err_t wui_window_cursor_set(wui_window_t* window, HCURSOR cursor)
+{
+    if(window->hwnd){
+        SetClassLongPtr(window->hwnd, GCLP_HCURSOR, (LONG_PTR)cursor);
+    }
+    return WUI_EOK;
+}
+
+wui_err_t wui_window_icon_set(wui_window_t* window, HICON icon)
+{
+    if(window->hwnd){
+        SetClassLongPtr(window->hwnd, GCLP_HICON, (LONG_PTR)icon);
+    }
+    return WUI_EOK;
+}
+
+wui_err_t wui_window_style_set(wui_window_t* window, UINT style)
+{
+    WNDCLASS WndClass;
+    GetClassInfo(window->hInstance, window->className, &WndClass);
+    WndClass.style = WndClass.style|style;
+    return (RegisterClass(&WndClass)!=0)?WUI_EOK:WUI_ERROR;
+}
 
 
 wui_err_t wui_window_init(wui_window_t* window, const char* name, HINSTANCE hInstance, WNDPROC WndProc)
@@ -69,11 +142,8 @@ wui_err_t wui_window_init(wui_window_t* window, const char* name, HINSTANCE hIns
         memcpy(window->className, name, name_size);
         window->className[name_size]='\0';
     }
-
-    if(wui_window__register(hInstance, window->className, window->wndproc)!=TRUE){
-        return WUI_ERROR;
-    }
-
+    
+    wui_window__register(hInstance, window->className, window->wndproc);
     return WUI_EOK;
 }
 
@@ -86,10 +156,15 @@ wui_err_t wui_window_create(wui_window_t * window){
     if(!window->hwnd){
 
         HWND hwnd = CreateWindow(window->className, window->className,
-                                 WS_OVERLAPPEDWINDOW,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
-                                 CW_USEDEFAULT, CW_USEDEFAULT,
-                                 NULL, NULL, window->hInstance, NULL);
+                                 WS_OVERLAPPEDWINDOW, // top-level window
+                                 CW_USEDEFAULT,       // default horizontal position
+                                 CW_USEDEFAULT,       // default vertical position
+                                 CW_USEDEFAULT,       // default width
+                                 CW_USEDEFAULT,       // default height
+                                 (HWND) NULL,         // no owner window
+                                 (HMENU) NULL,        // use class menu
+                                 window->hInstance,           // handle to application instance
+                                 (LPVOID) NULL);      // no window-creation data
 
         if(hwnd==NULL){
             return WUI_ERROR;

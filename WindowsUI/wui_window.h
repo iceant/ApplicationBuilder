@@ -19,6 +19,12 @@
 #include <sdk_hashtable.h>
 #endif /*INCLUDED_SDK_HASHTABLE_H*/
 
+#ifndef INCLUDED_WINUSER_H
+#define INCLUDED_WINUSER_H
+#include <winuser.h>
+#endif /*INCLUDED_WINUSER_H*/
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -30,6 +36,7 @@ typedef struct wui_window_s{
     HWND hwnd;
     char className[WUI_NAME_SIZE];
     sdk_hashtable_t messageHandlerTable;
+    ATOM register_atom;
 }wui_window_t;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -122,5 +129,11 @@ wui_err_t wui_window_show(wui_window_t * window, int nCmdShow);
 
 wui_err_t wui_window_register_message_handler(wui_window_t * window, uint16_t code, wui_window_message_handler_t handler
                                               , wui_window_message_handler_t* old_handler);
+
+
+wui_err_t wui_window_background_set(wui_window_t* window, HBRUSH background);
+wui_err_t wui_window_cursor_set(wui_window_t* window, HCURSOR cursor);
+wui_err_t wui_window_icon_set(wui_window_t* window, HICON icon);
+wui_err_t wui_window_style_set(wui_window_t* window, UINT style);
 
 #endif /*INCLUDED_WUI_WINDOW_H*/
