@@ -1,6 +1,6 @@
 #include <sdk_modbus_crc16.h>
 
-static const uint16_t wCRCTable[] = {
+static const uint16_t sdk_modbus_crc16__table[] = {
         0X0000, 0XC0C1, 0XC181, 0X0140, 0XC301, 0X03C0, 0X0280, 0XC241,
         0XC601, 0X06C0, 0X0780, 0XC741, 0X0500, 0XC5C1, 0XC481, 0X0440,
         0XCC01, 0X0CC0, 0X0D80, 0XCD41, 0X0F00, 0XCFC1, 0XCE81, 0X0E40,
@@ -49,7 +49,7 @@ uint16_t sdk_modbus_crc16(uint8_t * nData, sdk_size_t wLength){
     {
         nTemp = *nData++ ^ wCRCWord;
         wCRCWord >>= 8;
-        wCRCWord ^= wCRCTable[nTemp];
+        wCRCWord ^= sdk_modbus_crc16__table[nTemp];
     }
     return wCRCWord;
 }
