@@ -152,15 +152,15 @@ wui_err_t wui_window_destroy(wui_window_t * window){
     return (ret==TRUE)?WUI_EOK:WUI_ERROR;
 }
 
-wui_err_t wui_window_create(wui_window_t * window){
+wui_err_t wui_window_create(wui_window_t * window, int x, int y, int width, int height){
     if(!window->hwnd){
 
         HWND hwnd = CreateWindow(window->className, window->className,
                                  WS_OVERLAPPEDWINDOW, // top-level window
-                                 CW_USEDEFAULT,       // default horizontal position
-                                 CW_USEDEFAULT,       // default vertical position
-                                 CW_USEDEFAULT,       // default width
-                                 CW_USEDEFAULT,       // default height
+                                 x /*CW_USEDEFAULT*/,       // default horizontal position
+                                 y /*CW_USEDEFAULT*/,       // default vertical position
+                                 width /*CW_USEDEFAULT*/,       // default width
+                                 height /*CW_USEDEFAULT*/,       // default height
                                  (HWND) NULL,         // no owner window
                                  (HMENU) NULL,        // use class menu
                                  window->hInstance,           // handle to application instance

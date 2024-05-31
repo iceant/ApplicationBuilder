@@ -252,9 +252,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpszCmdPa
     wui_window_register_message_handler(&MainFrame, WM_SHOWWINDOW, MainFrame_OnShow, 0);
     wui_window_register_message_handler(&MainFrame, WM_DESTROY, MainFrame_OnDestroy, 0);
     
-    wui_window_create(&MainFrame);
+    wui_window_create(&MainFrame, CW_USEDEFAULT, CW_USEDEFAULT, 600, 400);
     
-    wui_window_icon_set(&MainFrame, LoadIcon(NULL, IDI_ERROR));
+    wui_window_icon_set(&MainFrame, LoadIcon(NULL, IDI_QUESTION));
     wui_window_cursor_set(&MainFrame, LoadCursor(NULL, IDC_HAND));
 
     wui_window_background_set(&MainFrame, BackgroundColor);

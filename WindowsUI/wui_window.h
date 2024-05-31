@@ -36,7 +36,6 @@ typedef struct wui_window_s{
     HWND hwnd;
     char className[WUI_NAME_SIZE];
     sdk_hashtable_t messageHandlerTable;
-    ATOM register_atom;
 }wui_window_t;
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -121,7 +120,7 @@ typedef struct wui_window_on_syskey_s{
 
 wui_err_t wui_window_init(wui_window_t* window, const char* name, HINSTANCE hInstance, WNDPROC WndProc);
 
-wui_err_t wui_window_create(wui_window_t * window);
+wui_err_t wui_window_create(wui_window_t * window, int x, int y, int width, int height);
 
 wui_err_t wui_window_destroy(wui_window_t * window);
 
