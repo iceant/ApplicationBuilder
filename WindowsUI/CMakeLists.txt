@@ -23,8 +23,17 @@ target_link_libraries(${PROJECT_NAME} PUBLIC SDK)
 file(GLOB TEST_SOURCES *.t.c)
 
 foreach (item IN LISTS TEST_SOURCES)
+    # 设置为GUI应用程序
+    set(CMAKE_WIN32_EXECUTABLE ON)
+
     get_filename_component(TestUnit ${item} NAME_WLE)
     message(STATUS "[${PROJECT_NAME}] TEST: ${TestUnit} - ${item}")
     add_executable(${TestUnit} ${item})
     target_link_libraries(${TestUnit} PUBLIC ${PROJECT_NAME})
+
+    # 不链接CMT.LIB库，这是Windows控制台应用程序的一个链接库
+    if(CMAKE_WIN32_EXECUTABLE)
+        set_target_properties(${TestUnit} PROPERTIES WIN32_EXECUTABLE TRUE)
+    endif()
 endforeach ()
+

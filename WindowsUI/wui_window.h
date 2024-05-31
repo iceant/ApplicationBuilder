@@ -126,7 +126,7 @@ wui_err_t wui_window_destroy(wui_window_t * window);
 
 wui_err_t wui_window_show(wui_window_t * window, int nCmdShow);
 
-wui_err_t wui_window_register_message_handler(wui_window_t * window, uint16_t code, wui_window_message_handler_t handler
+wui_err_t wui_window_register_message_handler(wui_window_t * window, uint16_t code/*WM_xxx*/, wui_window_message_handler_t handler
                                               , wui_window_message_handler_t* old_handler);
 
 
