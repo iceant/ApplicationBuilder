@@ -17,7 +17,7 @@
         ACTION                    \
     }
 
-
+#define CHECK_CAPACITY(X, RB) ((X)>SDK_RINGBUFFER_CAPACITY(RB))
 ////////////////////////////////////////////////////////////////////////////////
 ////
 int sdk_ringbuffer_init(sdk_ringbuffer_t* rb, void* buffer, sdk_size_t buffer_size, sdk_size_t item_size)
@@ -42,17 +42,19 @@ sdk_size_t sdk_ringbuffer_size(sdk_ringbuffer_t * rb)
 
 int sdk_ringbuffer_put(sdk_ringbuffer_t* rb, const void* item)
 {
-    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
+    if(!item) return SDK_RINGBUFFER_EINVAL;
+    
+//    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
 
     sdk_size_t next_write_idx = rb->write_idx+1;
-    if(next_write_idx > capacity){
+    if(/*next_write_idx >= capacity*/ CHECK_CAPACITY(next_write_idx, rb)){
         next_write_idx = 0;
     }
 
     if(next_write_idx==rb->read_idx){
         return SDK_RINGBUFFER_FULL;
     }
-
+    
     memcpy(rb->buffer+rb->write_idx*rb->object_size, item, rb->object_size);
 
     rb->write_idx = next_write_idx;
@@ -66,13 +68,14 @@ int sdk_ringbuffer_pop(sdk_ringbuffer_t* rb, void* item)
         return SDK_RINGBUFFER_EMPTY;
     }
 
-    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
     sdk_size_t next_read_idx = rb->read_idx+1;
-    if(next_read_idx>capacity){
+    if(CHECK_CAPACITY(next_read_idx, rb)){
         next_read_idx = 0;
     }
 
-    memcpy(item, rb->buffer+rb->read_idx*rb->object_size, rb->object_size);
+    if(item){
+        memcpy(item, rb->buffer+rb->read_idx*rb->object_size, rb->object_size);
+    }
     rb->read_idx = next_read_idx;
 
     return SDK_RINGBUFFER_OK;
@@ -80,10 +83,10 @@ int sdk_ringbuffer_pop(sdk_ringbuffer_t* rb, void* item)
 
 void* sdk_ringbuffer_put_slot(sdk_ringbuffer_t* rb)
 {
-    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
+//    sdk_size_t capacity = SDK_RINGBUFFER_CAPACITY(rb);
 
     sdk_size_t next_write_idx = rb->write_idx+1;
-    if(next_write_idx>capacity){
+    if(CHECK_CAPACITY(next_write_idx, rb)){
         next_write_idx = 0;
     }
 
@@ -121,11 +124,13 @@ int sdk_ringbuffer_peek(sdk_ringbuffer_t * rb, sdk_size_t idx, void* item){
 //    }
 
     sdk_size_t next_read_idx = rb->read_idx + idx;
-    if(next_read_idx>capacity){
+    if(CHECK_CAPACITY(next_read_idx, rb)){
         next_read_idx =  next_read_idx - capacity;
     }
 
-    memcpy(item, rb->buffer + next_read_idx * rb->object_size, rb->object_size);
+    if(item){
+        memcpy(item, rb->buffer + next_read_idx * rb->object_size, rb->object_size);
+    }
 
     return SDK_RINGBUFFER_OK;
 }

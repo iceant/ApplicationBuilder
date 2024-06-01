@@ -22,18 +22,18 @@ int main(int argc, char** argv){
     }
 
     sdk_size_t idx = sdk_stringbuffer_find(&sbuf, 0, "1234", 4);
-    printf("find(1234)=%d\n", idx);
+    printf("find(1234) at IDX: %d\n", idx);
 
     if(idx != SDK_STRINGBUFFER_EINDEX){
         int err = sdk_stringbuffer_advance_read_idx(&sbuf, idx);
         printf("sdk_stringbuffer_advance_read_idx: code=%d, read_idx=%d\n", err, sbuf.read_idx);
     }
 
-    unsigned long value = sdk_ringbuffer_strtoul(&sbuf, &idx, 10);
+    unsigned long value = sdk_stringbuffer_strtoul(&sbuf, &idx, 10);
     printf("Long: %lu, idx=%d, read_idx=%d\n", value, idx, sbuf.read_idx);
-
-    sdk_ringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_BigEndian);
-    sdk_ringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_LittleEndian);
+    
+    sdk_stringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_BigEndian);
+    sdk_stringbuffer_put_u16(&sbuf, 0xaabb, kSDK_ByteOrder_LittleEndian);
 
     printf("write_idx:%d, read_idx:%d\n", sbuf.write_idx, sbuf.read_idx);
 
@@ -45,8 +45,8 @@ int main(int argc, char** argv){
 //    }
 
 
-    printf("u16:%x\n", sdk_ringbuffer_read_u16(&sbuf, 0, kSDK_ByteOrder_BigEndian));
-    printf("u16:%x\n", sdk_ringbuffer_read_u16(&sbuf, 2, kSDK_ByteOrder_LittleEndian));
+    printf("u16:%x\n", sdk_stringbuffer_read_u16(&sbuf, 0, kSDK_ByteOrder_BigEndian));
+    printf("u16:%x\n", sdk_stringbuffer_read_u16(&sbuf, 2, kSDK_ByteOrder_LittleEndian));
 
     return 0;
 }

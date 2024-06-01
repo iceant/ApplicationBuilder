@@ -22,18 +22,18 @@ typedef struct sdk_ringbuffer_s{
 ////
 
 #define SDK_RINGBUFFER_OK               (0x00 )
-#define SDK_RINGBUFFER_FULL             (-0x10)
-#define SDK_RINGBUFFER_EMPTY            (-0x11)
-#define SDK_RINGBUFFER_EBUFSIZE         (-0x12)
-#define SDK_RINGBUFFER_EINDEX           (-0x13)
-#define SDK_RINGBUFFER_EINVAL           (-0x14)
+#define SDK_RINGBUFFER_FULL             (-16)
+#define SDK_RINGBUFFER_EMPTY            (-17)
+#define SDK_RINGBUFFER_EBUFSIZE         (-18)
+#define SDK_RINGBUFFER_EINDEX           (-19)
+#define SDK_RINGBUFFER_EINVAL           (-20)
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
 #define SDK_RINGBUFFER_SIZE(B)     (((B)->write_idx >= (B)->read_idx) \
     ?((B)->write_idx - (B)->read_idx)                                 \
-    :((B)->buffer_size - (B)->read_idx + (B)->write_idx))
+    :(((B)->buffer_size/(B)->object_size) - (B)->read_idx + (B)->write_idx))
 
 #define SDK_RINGBUFFER_CAPACITY(S) (((S)->buffer_size - (S)->object_size)/(S)->object_size)
 

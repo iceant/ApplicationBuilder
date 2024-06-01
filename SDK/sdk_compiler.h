@@ -57,6 +57,10 @@
     #ifndef SDK_C_STATICFORCEINLINE
         #define SDK_C_STATICFORCEINLINE static __forceinline
     #endif
+    
+    #ifndef SDK_C_WEAK
+        #define SDK_C_WEAK
+    #endif
 #endif
 
 #endif /* INCLUDED_SDK_COMPILER_H */

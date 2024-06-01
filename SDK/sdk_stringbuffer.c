@@ -132,20 +132,6 @@ sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx
     sdk_size_t i;
     sdk_size_t j;
 
-//
-//    if(sbuf->read_idx == sbuf->write_idx){
-//        return SDK_STRINGBUFFER_INVALID_INDEX;
-//    }
-//
-//    if(idx>=sbuf->buffer_size){
-//        return SDK_STRINGBUFFER_INVALID_INDEX;
-//    }
-//
-//    sdk_size_t size = SDK_STRINGBUFFER_SIZE(sbuf);
-//    if( idx > size){
-//        return SDK_STRINGBUFFER_INVALID_INDEX;
-//    }
-
     CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_EINDEX;)
 
     if (needle_size > size) {
@@ -245,7 +231,7 @@ ISALPHA(int c)
  * alphabets and digits are each contiguous.
  */
 unsigned long
-sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base)
+sdk_stringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base)
 {
     register sdk_size_t s = 0;
     register unsigned long acc;
@@ -306,7 +292,7 @@ sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register 
 
 
 
-uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
+uint32_t sdk_stringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
 {
     CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_READ_U32_EVAL;)
 
@@ -349,7 +335,7 @@ uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_b
     }
 }
 
-uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
+uint16_t sdk_stringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder)
 {
     CHECK_INDEX(sbuf, idx, return SDK_STRINGBUFFER_READ_U16_EVAL;)
 
@@ -387,7 +373,7 @@ uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_b
 }
 
 
-int sdk_ringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value,sdk_byteorder_t byteorder)
+int sdk_stringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value, sdk_byteorder_t byteorder)
 {
     uint8_t buf[4];
     if(byteorder==kSDK_ByteOrder_BigEndian){
@@ -415,7 +401,7 @@ int sdk_ringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value,sdk_byteorde
 }
 
 
-int sdk_ringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder)
+int sdk_stringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder)
 {
     uint8_t buf[2];
     if(byteorder==kSDK_ByteOrder_BigEndian){

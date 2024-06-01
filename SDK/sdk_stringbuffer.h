@@ -74,12 +74,12 @@ int sdk_stringbuffer_advance_read_idx(sdk_stringbuffer_t * sbuf, sdk_size_t idx)
 //// Advance Functions
 sdk_size_t sdk_stringbuffer_find(sdk_stringbuffer_t * sbuf, sdk_size_t idx, const char* needle, sdk_size_t needle_size);
 
-unsigned long sdk_ringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base);
+unsigned long sdk_stringbuffer_strtoul(sdk_stringbuffer_t * sbuf, sdk_size_t * endptr, register int base);
 
-uint32_t sdk_ringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
-uint16_t sdk_ringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
+uint32_t sdk_stringbuffer_read_u32(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
+uint16_t sdk_stringbuffer_read_u16(sdk_stringbuffer_t* sbuf, sdk_size_t idx, sdk_byteorder_t byteorder);
 
-int sdk_ringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value,sdk_byteorder_t byteorder);
-int sdk_ringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder);
+int sdk_stringbuffer_put_u32(sdk_stringbuffer_t* sbuf, uint32_t value, sdk_byteorder_t byteorder);
+int sdk_stringbuffer_put_u16(sdk_stringbuffer_t* sbuf, uint16_t value, sdk_byteorder_t byteorder);
 
 #endif /* INCLUDED_SDK_STRINGBUFFER_H */

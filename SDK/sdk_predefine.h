@@ -11,7 +11,7 @@
 
 #if (SDK_USE_TLSF==1)
     #ifndef SDK_TLSF_POOL_SIZE
-        #define SDK_TLSF_POOL_SIZE (1024*1024)
+        #define SDK_TLSF_POOL_SIZE (1024*1024*10)
     #endif
 #endif
 
