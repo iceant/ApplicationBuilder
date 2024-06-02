@@ -20,7 +20,7 @@
 #endif
 
 #ifndef SDK_USE_POSIX
-//    #define SDK_USE_POSIX
+    #define SDK_USE_POSIX
 #endif
 
 #ifdef WIN32
