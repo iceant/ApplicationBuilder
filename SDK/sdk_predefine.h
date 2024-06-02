@@ -19,4 +19,16 @@
     #define SDK_OBJECT_NAME_SIZE 32
 #endif
 
+#ifndef SDK_USE_POSIX
+    #define SDK_USE_POSIX
+#endif
+
+#ifdef WIN32
+    #ifndef SDK_USE_POSIX
+        #define OS_WIN32 1
+    #else
+        #define OS_WIN32 0
+    #endif
+#endif
+
 #endif /* INCLUDED_SDK_PREDEFINE_H */
