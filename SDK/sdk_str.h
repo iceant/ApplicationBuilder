@@ -29,7 +29,7 @@ char *sdk_str_dup(const char *s, int i, int j, int n);
 
 char *sdk_str_reverse(const char *s, int i, int j);
 
-char *up_str_cat(const char *s1, int i1, int j1,
+char *sdk_str_cat(const char *s1, int i1, int j1,
                  const char *s2, int i2, int j2);
 
 char *sdkstr_catv(const char *s, ...);
@@ -42,6 +42,22 @@ char* sdk_str_replace(char* original, char* pattern, char* replacement);
 
 ////////////////////////////////////////////////////////////////////////////////
 //// No Memory Allocation
+
+char* sdk_str_sub_to(char* dst, int dst_size, const char* s, int i, int j);
+
+char *sdk_str_dup_to(char* dst, int dst_size, const char *s, int i, int j, int n);
+
+char *sdk_str_reverse_to(char* dst, int dst_size, const char *s, int i, int j);
+
+char *sdk_str_cat_to(char* dst, int dst_size
+        , const char *s1, int i1, int j1
+        , const char *s2, int i2, int j2);
+
+char *sdkstr_catv_to(char* dst, int dst_size, const char *s, ...);
+
+char *sdk_str_map_to(char* dst, int dst_size
+                     , const char *s, int i, int j
+                     , const char *from, const char *to);
 
 int sdk_str_pos(const char *s, int i);
 

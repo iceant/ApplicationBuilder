@@ -40,6 +40,18 @@ char* sdk_str_sub(const char* s, int i, int j)
     return str;
 }
 
+char* sdk_str_sub_to(char* dst, int dst_size, const char* s, int i, int j)
+{
+    char *str;
+    char *p;
+    SDK_STR_CONVERT(s, i, j);
+    p = str = dst;
+    while (i < j && (dst_size-- > 1))
+        *dst++ = s[i++];
+    *dst = '\0';
+    return str;
+}
+
 char *sdk_str_dup(const char *s, int i, int j, int n)
 {
     int k;
@@ -50,6 +62,25 @@ char *sdk_str_dup(const char *s, int i, int j, int n)
     if (j - i > 0){
         while (n-- > 0){
             for (k = i; k < j; k++){
+                *p++ = s[k];
+            }
+        }
+    }
+    *p = '\0';
+    return str;
+}
+
+char *sdk_str_dup_to(char* dst, int dst_size, const char *s, int i, int j, int n)
+{
+    int k;
+    char *str;
+    char* p;
+    assert(n >= 0);
+    SDK_STR_CONVERT(s, i, j);
+    p = str = dst;
+    if ((j - i) > 0 && dst_size){
+        while ((n-- > 0) && dst_size){
+            for (k = i; k < j && (dst_size > 1); k++, dst_size--){
                 *p++ = s[k];
             }
         }
@@ -69,7 +100,18 @@ char *sdk_str_reverse(const char *s, int i, int j)
     return str;
 }
 
-char *up_str_cat(const char *s1, int i1, int j1,
+char *sdk_str_reverse_to(char* dst, int dst_size, const char *s, int i, int j)
+{
+    char *str, *p;
+    SDK_STR_CONVERT(s, i, j);
+    p = str = dst;
+    while ((j > i) && (dst_size-- > 1))
+        *p++ = s[--j];
+    *p = '\0';
+    return str;
+}
+
+char *sdk_str_cat(const char *s1, int i1, int j1,
                  const char *s2, int i2, int j2) {
     char *str, *p;
     SDK_STR_CONVERT(s1, i1, j1);
@@ -78,6 +120,22 @@ char *up_str_cat(const char *s1, int i1, int j1,
     while (i1 < j1)
         *p++ = s1[i1++];
     while (i2 < j2)
+        *p++ = s2[i2++];
+    *p = '\0';
+    return str;
+}
+
+char *sdk_str_cat_to(char* dst, int dst_size
+                    , const char *s1, int i1, int j1
+                    , const char *s2, int i2, int j2) {
+    char *str, *p;
+    SDK_STR_CONVERT(s1, i1, j1);
+    SDK_STR_CONVERT(s2, i2, j2);
+//    p = str = SDK_ALLOC(j1 - i1 + j2 - i2 + 1);
+    p = str = dst;
+    while ((i1 < j1) && (dst_size-- > 1))
+        *p++ = s1[i1++];
+    while ((i2 < j2) && (dst_size-- > 1))
         *p++ = s2[i2++];
     *p = '\0';
     return str;
@@ -114,6 +172,36 @@ char *sdkstr_catv(const char *s, ...) {
     return str;
 }
 
+char *sdkstr_catv_to(char* dst, int dst_size, const char *s, ...) {
+    char *str, *p;
+    const char *save = s;
+    int i, j, len = 0;
+    va_list ap;
+    va_start(ap, s);
+    while (s) {
+        i = va_arg(ap, int);
+        j = va_arg(ap, int);
+        SDK_STR_CONVERT(s, i, j);
+        len += j - i;
+        s = va_arg(ap, const char *);
+    }
+    va_end(ap);
+    p = str = dst;
+    s = save;
+    va_start(ap, s);
+    while (s && (dst_size>1)) {
+        i = va_arg(ap, int);
+        j = va_arg(ap, int);
+        SDK_STR_CONVERT(s, i, j);
+        while ((i < j) && (dst_size-- > 1))
+            *p++ = s[i++];
+        s = va_arg(ap, const char *);
+    }
+    va_end(ap);
+    *p = '\0';
+    return str;
+}
+
 char *sdk_str_map(const char *s, int i, int j,
                  const char *from, const char *to) {
     static char map[256] = { 0 };
@@ -133,6 +221,32 @@ char *sdk_str_map(const char *s, int i, int j,
         SDK_STR_CONVERT(s, i, j);
         p = str = SDK_ALLOC(j - i + 1);
         while (i < j)
+            *p++ = map[(unsigned char)s[i++]];
+        *p = '\0';
+        return str;
+    } else
+        return NULL;
+}
+
+char *sdk_str_map_to(char* dst, int dst_size, const char *s, int i, int j,
+                  const char *from, const char *to) {
+    static char map[256] = { 0 };
+    if (from && to) {
+        unsigned c;
+        for (c = 0; c < sizeof map; c++)
+            map[c] = (char)c;
+        while (*from && *to)
+            map[(unsigned char)*from++] = *to++;
+        assert(*from == 0 && *to == 0);
+    } else {
+        assert(from == NULL && to == NULL && s);
+        assert(map['a']);
+    }
+    if (s) {
+        char *str, *p;
+        SDK_STR_CONVERT(s, i, j);
+        p = str = dst;
+        while ((i < j) && (dst_size-- > 1))
             *p++ = map[(unsigned char)s[i++]];
         *p = '\0';
         return str;
