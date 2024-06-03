@@ -85,7 +85,7 @@ void sdk_exception_raise(const sdk_exception_t* exception, const char* file, int
 	sdk_exception_flag = setjmp(sdk_exception_frame.env); \
 	if (sdk_exception_flag == kSDK_Exception_Entered) {
 
-#define SDK_EXCEPT(e) \
+#define SDK_CATCH(e) \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_pop(); \
 	} else if (sdk_exception_frame.exception == &(e)) { \
 		sdk_exception_flag = kSDK_Exception_Handled;
@@ -118,7 +118,7 @@ void sdk_exception_raise(const sdk_exception_t* exception, const char* file, int
 	sdk_exception_stack = &sdk_exception_frame;  \
 	sdk_exception_flag = setjmp(sdk_exception_frame.env); \
 	if (sdk_exception_flag == kSDK_Exception_Entered) {
-#define SDK_EXCEPT(e) \
+#define SDK_CATCH(e) \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_stack = sdk_exception_stack->prev; \
 	} else if (sdk_exception_frame.exception == &(e)) { \
 		sdk_exception_flag = kSDK_Exception_Handled;

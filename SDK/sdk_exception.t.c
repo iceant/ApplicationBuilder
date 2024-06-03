@@ -18,9 +18,11 @@ int main(int argc, char** argv){
     char* buf;
     SDK_TRY
         buf = allocate(4096);
-    SDK_EXCEPT(Allocate_Failed)
+    SDK_CATCH(Allocate_Failed)
         fprintf(stderr, "Couldn't allocate the buffer\n");
-        exit(EXIT_FAILURE);
+//        exit(EXIT_FAILURE);
+    SDK_FINALLY
+            fprintf(stderr, "Finally!!!\n");
     SDK_END_TRY
 
     if(buf){
