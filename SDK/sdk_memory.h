@@ -39,7 +39,7 @@ void  sdk_memory_std_free(void* mem);
 ////
 
 #define SDK_ALLOC(SZ) sdk_memory_malloc((SZ), __FILE__, __LINE__)
-#define SDK_CALLOC(N, SZ) sdk_memory_malloc((N), (SZ), __FILE__, __LINE__)
+#define SDK_CALLOC(N, SZ) sdk_memory_calloc((N), (SZ), __FILE__, __LINE__)
 #define SDK_REALLOC(P, SZ) sdk_memory_realloc((P), (SZ), __FILE__, __LINE__)
 #define SDK_RESIZE(P, SZ) ((P)=sdk_memory_realloc((P), (SZ), __FILE__, __LINE__))
 #define SDK_FREE(P) (sdk_memory_free((P), __FILE__, __LINE__), (P)=0)
