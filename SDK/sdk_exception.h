@@ -70,34 +70,42 @@ void sdk_exception_raise(const sdk_exception_t* exception, const char* file, int
 
 #ifdef WIN32
 #define SDK_RAISE(e) sdk_exception_raise(&(e), __FILE__, __LINE__)
+
 #define SDK_RERAISE sdk_exception_raise(sdk_exception_frame.exception, \
 	sdk_exception_frame.file, sdk_exception_frame.line)
+
 #define SDK_RETURN switch (sdk_exception_pop(),0) default: return
+
 #define SDK_TRY do { \
 	volatile int sdk_exception_flag; \
 	sdk_exception_frame_t sdk_exception_frame; \
-	if (sdk_exception_index == -1) \
+	if (sdk_exception_g_index == -1) \
 		sdk_exception_init(); \
 	sdk_exception_push(&sdk_exception_frame);  \
 	sdk_exception_flag = setjmp(sdk_exception_frame.env); \
 	if (sdk_exception_flag == kSDK_Exception_Entered) {
+
 #define SDK_EXCEPT(e) \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_pop(); \
 	} else if (sdk_exception_frame.exception == &(e)) { \
 		sdk_exception_flag = kSDK_Exception_Handled;
+
 #define SDK_ELSE \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_pop(); \
 	} else { \
 		sdk_exception_flag = kSDK_Exception_Handled;
+
 #define SDK_FINALLY \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_pop(); \
 	} { \
 		if (sdk_exception_flag == kSDK_Exception_Entered) \
 			sdk_exception_flag = kSDK_Exception_Finalized;
+
 #define SDK_END_TRY \
 		if (sdk_exception_flag == kSDK_Exception_Entered) sdk_exception_pop(); \
 		} if (sdk_exception_flag == kSDK_Exception_Raised) SDK_RERAISE; \
-} while (0)
+} while (0);
+
 #else
 #define SDK_RAISE(e) sdk_exception_raise(&(e), __FILE__, __LINE__)
 #define SDK_RERAISE sdk_exception_raise(sdk_exception_frame.exception, \

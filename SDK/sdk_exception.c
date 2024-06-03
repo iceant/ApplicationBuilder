@@ -21,7 +21,7 @@ void sdk_exception_raise(const sdk_exception_t* e, const char* file, int line)
     #else
     sdk_exception_frame_t * p = sdk_exception_g_stack;
     #endif
-    
+
     assert(e);
     if(p==NULL){
         fprintf(stderr, "Uncaught exception");
@@ -39,7 +39,7 @@ void sdk_exception_raise(const sdk_exception_t* e, const char* file, int line)
         abort();
     }
     
-    p->exception = 0;
+    p->exception = e;
     p->file = file;
     p->line= line;
     
