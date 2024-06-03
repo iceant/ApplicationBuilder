@@ -6,7 +6,7 @@
 
 sdk_err_t sdk_thread_init(sdk_thread_t* thread, sdk_thread_function_t thread_entry, void* parameter
         , void* stack_addr, sdk_size_t stack_size
-        , sdk_int_t priority, sdk_uint_t time_slices){
+        , sdk_thread_priority_t priority, sdk_uint_t time_slices){
     
     thread->thread_entry = thread_entry;
     thread->parameter = parameter;

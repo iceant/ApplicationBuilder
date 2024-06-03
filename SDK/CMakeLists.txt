@@ -4,7 +4,8 @@ project(SDK C)
 ########################################################################################################################
 #### SETTINGS
 set(CMAKE_C_STANDARD 11)
-
+set(SDK_CPU_BITS 8*${CMAKE_SIZEOF_VOID_P})
+add_definitions(-DSDK_CPU_BITS=${SDK_CPU_BITS})
 ########################################################################################################################
 #### SUB PROJECTS
 add_subdirectory(../Public/TLSF-2.4.6 ${CMAKE_CURRENT_BINARY_DIR}/TLSF)
