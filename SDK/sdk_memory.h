@@ -44,8 +44,8 @@ void  sdk_memory_std_free(void* mem);
 #define SDK_RESIZE(P, SZ) ((P)=sdk_memory_realloc((P), (SZ), __FILE__, __LINE__))
 #define SDK_FREE(P) (sdk_memory_free((P), __FILE__, __LINE__), (P)=0)
 
-#define SDK_NEW(P) (P)=SDK_ALLOC(sizeof(*(P)))
-#define SDK_NEW0(P) (P)=SDK_CALLOC(1, sizeof(*(P)))
+#define SDK_NEW(P) ((P)=SDK_ALLOC(sizeof(*(P))))
+#define SDK_NEW0(P) ((P)=SDK_CALLOC(1, sizeof(*(P))))
 
 #if (SDK_USE_TLSF==1)
     #define std_malloc      sdk_memory_std_malloc
