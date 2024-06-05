@@ -19,6 +19,9 @@ foreach (item IN LISTS SOURCES)
     message(STATUS "[${PROJECT_NAME}] SOURCE: ${item}")
 endforeach ()
 
+#find_package(OpenSSL REQUIRED)
+#message(STATUS "[${PROJECT_NAME}] OpenSSL_FOUND: ${OpenSSL_FOUND}")
+
 add_library(${PROJECT_NAME} ${SOURCES})
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_link_libraries(${PROJECT_NAME} PUBLIC TLSF)
