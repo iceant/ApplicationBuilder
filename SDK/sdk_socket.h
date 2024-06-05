@@ -70,6 +70,25 @@
 #include <string.h>
 #endif /*INCLUDED_STRING_H*/
 
+#ifndef INCLUDED_SDK_TYPES_H
+#include <sdk_types.h>
+#endif /*INCLUDED_SDK_TYPES_H*/
+
+#ifndef INCLUDED_SDK_ERRORS_H
+#include <sdk_errors.h>
+#endif /*INCLUDED_SDK_ERRORS_H*/
+
+#ifndef INCLUDED_TIME_H
+#define INCLUDED_TIME_H
+#include <time.h>
+#endif /*INCLUDED_TIME_H*/
+
+////////////////////////////////////////////////////////////////////////////////
+////
+
+#if !defined(IPV6_V6ONLY)
+#define IPV6_V6ONLY 27
+#endif
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -88,6 +107,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
+
+sdk_err_t sdk_socket_init(void);
+
+void sdk_socket_destroy(void);
+
+////////////////////////////////////////////////////////////////////////////////
+////
+
+#define sdk_socket_socket           socket
+#define sdk_socket_bind             bind
+#define sdk_socket_listen           listen
+#define sdk_socket_connect          connect
+#define sdk_socket_accept           accept
+#define sdk_socket_send             send
+#define sdk_socket_recv             recv
+#define sdk_socket_sendto           sendto
+#define sdk_socket_recvfrom         recvfrom
+#define sdk_socket_setsockopt       setsockopt
+#define sdk_socket_close(s)         SDK_SOCKET_CLOSE_SOCKET(s)
 
 
 
