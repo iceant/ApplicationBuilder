@@ -24,6 +24,8 @@ typedef sdk_int_t sdk_err_t;
 #define SDK_EEMPTY      (-6)
 #define SDK_ETIMEOUT    (-7)
 #define SDK_ENONE       (-8)
+#define SDK_EOVERFLOW   (-9)
+#define SDK_EDIVZERO    (-10)
 
 
 

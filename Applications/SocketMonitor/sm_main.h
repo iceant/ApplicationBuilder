@@ -1,0 +1,4 @@
+#ifndef INCLUDED_SM_MAIN_H
+#define INCLUDED_SM_MAIN_H
+
+#endif /* INCLUDED_SM_MAIN_H */
