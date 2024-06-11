@@ -129,8 +129,9 @@ sdk_err_t sdk_mp_fromint(sdk_mp_t z, long v) {
     } else if (v < 0) {
         sdk_xp_fromint(nbytes, z, -v);
         sdk_xp_neg(nbytes, z, z, 1);
-    } else
+    } else{
         sdk_xp_fromint(nbytes, z, v);
+    }
     z[nbytes-1] &= msb;
     if ((nbits < 8*(int)sizeof (v) &&
          (v < -(1L<<(nbits-1)) || v >= (1L<<(nbits-1))))){

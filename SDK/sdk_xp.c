@@ -33,6 +33,7 @@ unsigned long sdk_xp_fromint(int n, sdk_xp_t z, unsigned long u) {
         z[i] = 0;
     return u;
 }
+
 unsigned long sdk_xp_toint(int n, sdk_xp_t x) {
     unsigned long u = 0;
     int i = (int)sizeof u;
@@ -42,11 +43,13 @@ unsigned long sdk_xp_toint(int n, sdk_xp_t x) {
         u = BASE*u + x[i];
     return u;
 }
+
 int sdk_xp_length(int n, sdk_xp_t x) {
     while (n > 1 && x[n-1] == 0)
         n--;
     return n;
 }
+
 int sdk_xp_add(int n, sdk_xp_t z, sdk_xp_t x, sdk_xp_t y, int carry) {
     int i;
     for (i = 0; i < n; i++) {
@@ -56,6 +59,7 @@ int sdk_xp_add(int n, sdk_xp_t z, sdk_xp_t x, sdk_xp_t y, int carry) {
     }
     return carry;
 }
+
 int sdk_xp_sub(int n, sdk_xp_t z, sdk_xp_t x, sdk_xp_t y, int borrow) {
     int i;
     for (i = 0; i < n; i++) {
@@ -65,6 +69,7 @@ int sdk_xp_sub(int n, sdk_xp_t z, sdk_xp_t x, sdk_xp_t y, int borrow) {
     }
     return borrow;
 }
+
 int sdk_xp_sum(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     int i;
     for (i = 0; i < n; i++) {
@@ -74,6 +79,7 @@ int sdk_xp_sum(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     }
     return y;
 }
+
 int sdk_xp_diff(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     int i;
     for (i = 0; i < n; i++) {
@@ -83,6 +89,7 @@ int sdk_xp_diff(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     }
     return y;
 }
+
 int sdk_xp_neg(int n, sdk_xp_t z, sdk_xp_t x, int carry) {
     int i;
     for (i = 0; i < n; i++) {
@@ -92,6 +99,7 @@ int sdk_xp_neg(int n, sdk_xp_t z, sdk_xp_t x, int carry) {
     }
     return carry;
 }
+
 int sdk_xp_mul(sdk_xp_t z, int n, sdk_xp_t x, int m, sdk_xp_t y) {
     int i, j, carryout = 0;
     for (i = 0; i < n; i++) {
@@ -110,6 +118,7 @@ int sdk_xp_mul(sdk_xp_t z, int n, sdk_xp_t x, int m, sdk_xp_t y) {
     }
     return carryout;
 }
+
 int sdk_xp_product(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     int i;
     unsigned carry = 0;
@@ -120,6 +129,7 @@ int sdk_xp_product(int n, sdk_xp_t z, sdk_xp_t x, int y) {
     }
     return carry;
 }
+
 int sdk_xp_div(int n, sdk_xp_t q, sdk_xp_t x, int m, sdk_xp_t y, sdk_xp_t r, sdk_xp_t tmp) {
     int nx = n, my = m;
     n = sdk_xp_length(n, x);
@@ -179,6 +189,7 @@ int sdk_xp_div(int n, sdk_xp_t q, sdk_xp_t x, int m, sdk_xp_t y, sdk_xp_t r, sdk
     }
     return 1;
 }
+
 long sdk_xp_quotient(int n, sdk_xp_t z, sdk_xp_t x, unsigned long y) {
     int i;
     long carry = 0;
@@ -189,6 +200,7 @@ long sdk_xp_quotient(int n, sdk_xp_t z, sdk_xp_t x, unsigned long y) {
     }
     return carry;
 }
+
 int sdk_xp_cmp(int n, sdk_xp_t x, sdk_xp_t y) {
     int i = n - 1;
     while (i > 0 && x[i] == y[i])

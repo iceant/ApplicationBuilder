@@ -13,6 +13,10 @@
   ((type *) ((char *) (ptr) - ((unsigned long) &((type *) 0)->field)))
 
 
-#define SDK_PAGES(T,SZ) (((T)-1)/(SZ) + 1)
+#define SDK_PAGES(T,U) (((T)-1)/(U) + 1)
+
+
+////////////////////////////////////////////////////////////////////////////////
+////
 
 #endif /* INCLUDED_SDK_MACROS_H */
