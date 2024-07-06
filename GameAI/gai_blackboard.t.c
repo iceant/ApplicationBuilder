@@ -32,11 +32,11 @@ int main(int arg, char** argv){
     printf("name: %s\n", name);
     
     gai_knowledge_source_t value_source;
-    gai_knowledge_source_init(&value_source, evaluator, 1000);
+    gai_knowledge_source_init(&value_source, evaluator, 2000);
     gai_blackboard_add_knowledge_source(&blackboard, "value", &value_source);
     
     gai_knowledge_source_t value_source2;
-    gai_knowledge_source_init(&value_source2, evaluator, 1000);
+    gai_knowledge_source_init(&value_source2, evaluator, 4000);
     gai_blackboard_add_knowledge_source(&blackboard, "value", &value_source2);
     
     for(int i=0; i<10; i++){

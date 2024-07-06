@@ -1,5 +1,6 @@
 #include <gai_blackboard.h>
 #include <sdk_memory.h>
+#include <stdio.h>
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -12,6 +13,7 @@ static bool  sdk_vector_eq(const void *data1, const void *data2, void *arg) {
 }
 
 static void sdk_vector_free(void *data, void *arg) {
+//    printf("free vector: %p\n", data);
     sdk_vector_destroy((sdk_vector_t*)data);
     SDK_FREE(data);
 }
@@ -92,9 +94,9 @@ static int gai_blackboard_evaluate_source(gai_blackboard_t * self, sdk_vector_t 
 }
 
 int gai_blackboard_get(gai_blackboard_t* blackboard, const char* name, void** result){
-    sdk_vector_t* list = sdk_hashtable_get(&blackboard->sources, name);
     void* d_result = 0;
     int err = 0;
+    sdk_vector_t* list = sdk_hashtable_get(&blackboard->sources, name);
     if(list){
         gai_blackboard_evaluate_source(blackboard, list, &d_result);
     }else{

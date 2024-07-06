@@ -18,8 +18,8 @@ int gai_knowledge_source_init(gai_knowledge_source_t* source
 int gai_knowledge_source_evaluate(gai_knowledge_source_t* source, void* userdata, gai_knowledge_source_evaluate_result_t* result)
 {
     gai_time_t time = sdk_time_get_current_ms();
-    gai_time_t next_update_time = time + source->update_frequency;
-    if(next_update_time > source->last_update_time){
+    gai_time_t next_update_time = source->last_update_time + source->update_frequency;
+    if(next_update_time <= time){
         source->last_update_time = time;
         
         gai_knowledge_source_evaluate_result_t eval_result={.confidence = 0, .evaluation = 0};
