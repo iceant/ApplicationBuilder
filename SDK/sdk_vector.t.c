@@ -8,7 +8,9 @@ int main(int argc, char** argv) {
     
     sdk_vector_t v;
     err = sdk_vector_init(&v, 0);
-    printf("Vector Init Failed! Code=%d\n", err);
+    if(err!=SDK_VECTOR_OK){
+        printf("Vector Init Failed! Code=%d\n", err);
+    }
     
     for(int i=0; i<10; i++){
         err = sdk_vector_resize_add(&v, (void*)(i+1));

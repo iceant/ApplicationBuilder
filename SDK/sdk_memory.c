@@ -42,14 +42,15 @@ SDK_C_CONSTRUCTOR(sdk_memory__ctor)
     signal(SIGTERM, (void(*)(int)) sdk_memory__exit_hook);
     signal(SIGSTOP, (void(*)(int)) sdk_memory__exit_hook);
     signal(SIGKILL, (void(*)(int)) sdk_memory__exit_hook);
+    atexit((void (*)(void)) sdk_memory__exit_hook);
     #endif
     
     sdk_memory__tlsf_pool = std_malloc(SDK_TLSF_POOL_SIZE);
     if(!sdk_memory__tlsf_pool) return;
     
-    sdk_memory_init(sdk_memory__tlsf_pool, SDK_TLSF_POOL_SIZE);
+    sdk_size_t size = sdk_memory_init(sdk_memory__tlsf_pool, SDK_TLSF_POOL_SIZE);
+    printf("sdk_memory_init: %u/%u(%u)\n", size, SDK_TLSF_POOL_SIZE, (SDK_TLSF_POOL_SIZE-size));
     
-    atexit((void (*)(void)) sdk_memory__exit_hook);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

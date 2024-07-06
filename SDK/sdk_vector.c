@@ -71,8 +71,14 @@ sdk_err_t sdk_vector_resize(sdk_vector_t* vector, sdk_size_t new_capacity){
         vector->size = 0;
     }else if(vector->capacity==0){
         vector->items = SDK_ALLOC(ELEMENT_SIZE * new_capacity);
+        if(!vector->items){
+            return SDK_VECTOR_NOMEM;
+        }
     }else{
         void** items = SDK_ALLOC(ELEMENT_SIZE * new_capacity);
+        if(!items){
+            return SDK_VECTOR_NOMEM;
+        }
         memcpy(items, vector->items, ELEMENT_SIZE * vector->size);
         if(vector->size > new_capacity){
             vector->size = new_capacity;
@@ -88,7 +94,7 @@ sdk_err_t sdk_vector_resize(sdk_vector_t* vector, sdk_size_t new_capacity){
 
 sdk_err_t sdk_vector_resize_add(sdk_vector_t* vector, void* item)
 {
-    assert(vector);
+    if(!vector) return SDK_VECTOR_EINVAL;
     
     sdk_err_t err=SDK_VECTOR_OK;
     

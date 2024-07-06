@@ -1,106 +1,103 @@
 #include <gai_decisiontree.h>
 
-////////////////////////////////////////////////////////////////////////////////
-////
-gai_err_t gai_decision_tree_node_init(gai_decision_tree_node_t* node, const char* name, gai_decision_tree_node_type_t type, void* userdata)
+int gai_decisiontree_init(gai_decisiontree_t* tree, const char* name, void* userdata)
 {
-    if(!node) return GAI_EINVAL;
-    
-    gai_object_init(&node->object, name, kGAI_ObjectType_DecisionTreeNode, userdata);
-    
-    node->type = type;
-    SDK_LIST_INIT(&node->children_list);
-    SDK_LIST_INIT(&node->child_node);
-
-    node->evaluator = 0;
-    node->action = 0;
-    
+    gai_object_init(&tree->object, kGAI_ObjectType_DecisionTree, name, userdata);
+    tree->branch = 0;
+    tree->current_action = 0;
     return GAI_OK;
 }
 
-gai_err_t gai_decision_tree_node_add_child(gai_decision_tree_node_t* node, gai_decision_tree_node_t * child){
-    if(!node || !child){
-        return GAI_EINVAL;
-    }
-    SDK_LIST_REMOVE(&child->child_node);
-    SDK_LIST_INSERT_BEFORE(&node->children_list, &child->child_node); /*Add to TAIL*/
-    return GAI_OK;
-}
-
-gai_decision_tree_node_t * gai_decision_tree_node_evaluate(gai_decision_tree_node_t* node, void* ud){
-    int child_idx = gai_evaluator_evaluate(node->evaluator, ud);
-    
-    if(child_idx==GAI_EINVAL || child_idx==GAI_EVALUATOR_NOFUNCTION) return 0;
-
-    sdk_list_node_t * list_node;
-    gai_decision_tree_node_t * tree_node;
-    int idx = 0;
-    SDK_LIST_FOREACH(list_node, &node->children_list){
-        tree_node = SDK_LIST_DATA(list_node, gai_decision_tree_node_t, child_node);
-        if(child_idx==idx){
-            break;
-        }
-        idx+=1;
-    }
-
-    if(idx==child_idx && list_node!=&node->children_list){
-        if(tree_node->type==kGAI_DecisionTreeNodeType_Branch){
-            return gai_decision_tree_node_evaluate(tree_node, ud);
-        }
-    }
-
-    return tree_node;
-}
-
-
-gai_err_t gai_decision_tree_node_set_evaluator(gai_decision_tree_node_t* node, gai_evaluator_t* evaluator)
+int gai_decisiontree_set_branch(gai_decisiontree_t * tree, gai_decisionbranch_t * branch)
 {
-    if(!node){
-        return GAI_EINVAL;
-    }
-    node->evaluator = evaluator;
-    return GAI_OK;
-}
-////////////////////////////////////////////////////////////////////////////////
-////
-
-gai_err_t gai_decision_tree_init(gai_decision_tree_t* tree, const char* name, void* userdata)
-{
-    if(!tree) return GAI_EINVAL;
-    
-    gai_object_init(&tree->object, name, kGAI_ObjectType_DecisionTree, userdata);
-    
-    return GAI_OK;
-}
-
-gai_err_t gai_decision_tree_set_branch(gai_decision_tree_t* tree, gai_decision_tree_node_t* branch)
-{
-    if(!tree) return GAI_EINVAL;
-    
     tree->branch = branch;
-    
     return GAI_OK;
 }
 
-gai_err_t gai_decision_tree_update(gai_decision_tree_t * tree, void* userdata)
+int gai_decisiontree_update(gai_decisiontree_t* tree, void* userdata)
 {
+    if(!tree) return GAI_EINVAL;
+    
+    int err = GAI_OK;
     if(tree->branch==0){
-        return GAI_DECISIONTREE_ENOBRANCH;
+        return GAI_OK;
     }
     
-    if(!tree->current_action){
-        tree->current_action = gai_decision_tree_node_evaluate(tree->branch, userdata);
-        if(!tree->current_action) return GAI_ERETVAL;
-        gai_action_initialize(tree->current_action->action, userdata);
+    /* Search the tree for an Action to run if not currently executing an Action */
+    if(tree->current_action==0){
+        err = gai_decisionbranch_evaluate(tree->branch, &tree->current_action);
+        if(err!=GAI_OK){
+            return err;
+        }
+        if(tree->current_action){
+            err = gai_action_initialize(tree->current_action);
+            if(err!=GAI_OK){
+                return err;
+            }
+        }
     }
     
-    int status = gai_action_update(tree->current_action->action, userdata);
-    if(status==GAI_ACTION_STATUS_TERMINATED){
-        gai_action_cleanup(tree->current_action->action, userdata);
+    gai_action_status_t status = gai_action_update(tree->current_action);
+    if(status==kGAI_ActionStatus_TERMINATED){
+        gai_action_cleanup(tree->current_action);
         tree->current_action = 0;
     }
     
     return GAI_OK;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+////
 
+int gai_decisionbranch_init(gai_decisionbranch_t* branch, const char* name, void* userdata)
+{
+    gai_object_init(&branch->object, kGAI_ObjectType_DecisionBranch, name, userdata);
+    sdk_vector_init(&branch->children, 0);
+    return GAI_OK;
+}
+
+void gai_decisionbranch_destroy(gai_decisionbranch_t * branch)
+{
+    sdk_vector_destroy(&(branch->children));
+}
+
+int gai_decisionbranch_set_evaluator(gai_decisionbranch_t * branch, const char* name, gai_evaluator_function_t function, void* userdata)
+{
+    gai_evaluator_init(&branch->evaluator, name, function, userdata);
+    return GAI_OK;
+}
+
+int gai_decisionbranch_add_child(gai_decisionbranch_t* branch, gai_object_t * child){
+    sdk_vector_t* children = &branch->children;
+    int err = sdk_vector_resize_add(children, child);
+    if(err!=SDK_EOK){
+        return GAI_ERROR;
+    }
+    
+    return GAI_OK;
+}
+
+int gai_decisionbranch_evaluate(gai_decisionbranch_t* branch, gai_action_t** result)
+{
+    int eval = gai_evaluator_evaluate(&branch->evaluator);
+    if(eval==GAI_ERROR){
+        return eval;
+    }
+    
+    gai_object_t * choice = (gai_object_t*)sdk_vector_get(&branch->children, eval);
+    
+    if(choice==0){
+        return GAI_ERROR;
+    }
+    
+    if(choice->type==kGAI_ObjectType_DecisionBranch){
+        return gai_decisionbranch_evaluate((gai_decisionbranch_t*)choice, result);
+    }else if(choice->type==kGAI_ObjectType_Action){
+        if(result){
+           *result = (gai_action_t*)choice;
+        }
+        return GAI_OK;
+    }
+    
+    return GAI_ERROR;
+}

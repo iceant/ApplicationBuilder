@@ -1,6 +1,5 @@
 #ifndef INCLUDED_GAI_DECISIONTREE_H
 #define INCLUDED_GAI_DECISIONTREE_H
-
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
@@ -16,61 +15,47 @@
 #include <gai_evaluator.h>
 #endif /*INCLUDED_GAI_EVALUATOR_H*/
 
-#ifndef INCLUDED_SDK_LIST_H
-#include <sdk_list.h>
-#endif /*INCLUDED_SDK_LIST_H*/
+#ifndef INCLUDED_SDK_VECTOR_H
+#include <sdk_vector.h>
+#endif /*INCLUDED_SDK_VECTOR_H*/
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
-typedef struct gai_decision_tree_s gai_decision_tree_t;
-typedef struct gai_decision_tree_node_s gai_decision_tree_node_t;
+typedef struct gai_decisiontree_s gai_decisiontree_t;
 
-typedef enum gai_decision_tree_node_type_enum{
-    kGAI_DecisionTreeNodeType_Branch = 0,
-    kGAI_DecisionTreeNodeType_Action,
-}gai_decision_tree_node_type_t;
-
-struct gai_decision_tree_node_s{
+typedef struct gai_decisionbranch_s{
     gai_object_t object;
-    gai_decision_tree_node_type_t type;
-    sdk_list_t children_list;
-    sdk_list_node_t child_node;
-    gai_evaluator_t* evaluator;
-    gai_action_t * action;
-};
+    gai_evaluator_t evaluator;
+    sdk_vector_t children;
+}gai_decisionbranch_t;
 
-struct gai_decision_tree_s{
+struct gai_decisiontree_s
+{
     gai_object_t object;
-    gai_decision_tree_node_t*   branch;
-    gai_decision_tree_node_t*   current_action;
+    gai_decisionbranch_t* branch;
+    gai_action_t* current_action;
 };
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
+int gai_decisiontree_init(gai_decisiontree_t* tree, const char* name, void* userdata);
 
-#define GAI_DECISIONTREE_ENOBRANCH (-0xD001)
+int gai_decisiontree_set_branch(gai_decisiontree_t * tree, gai_decisionbranch_t * branch);
 
-////////////////////////////////////////////////////////////////////////////////
-////
-
-gai_err_t gai_decision_tree_node_init(gai_decision_tree_node_t* node, const char* name, gai_decision_tree_node_type_t type, void* userdata);
-
-gai_err_t gai_decision_tree_node_add_child(gai_decision_tree_node_t* node, gai_decision_tree_node_t * child);
-
-gai_decision_tree_node_t * gai_decision_tree_node_evaluate(gai_decision_tree_node_t* node, void* ud);
-
-gai_err_t gai_decision_tree_node_set_evaluator(gai_decision_tree_node_t* node, gai_evaluator_t* evaluator);
+int gai_decisiontree_update(gai_decisiontree_t* tree, void* userdata);
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
 
+int gai_decisionbranch_init(gai_decisionbranch_t* branch, const char* name, void* userdata);
 
-gai_err_t gai_decision_tree_init(gai_decision_tree_t* tree, const char* name, void* userdata);
+void gai_decisionbranch_destroy(gai_decisionbranch_t * branch);
 
-gai_err_t gai_decision_tree_set_branch(gai_decision_tree_t* tree, gai_decision_tree_node_t* branch);
+int gai_decisionbranch_set_evaluator(gai_decisionbranch_t * branch, const char* name, gai_evaluator_function_t function, void* userdata);
 
-gai_err_t gai_decision_tree_update(gai_decision_tree_t *tree, void* ud);
+int gai_decisionbranch_evaluate(gai_decisionbranch_t* branch, gai_action_t** result);
 
+int gai_decisionbranch_add_child(gai_decisionbranch_t* branch, gai_object_t * child);
 
 #endif /* INCLUDED_GAI_DECISIONTREE_H */

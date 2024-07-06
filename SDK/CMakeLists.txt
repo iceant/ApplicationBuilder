@@ -9,6 +9,7 @@ add_definitions(-DSDK_CPU_BITS=${SDK_CPU_BITS})
 ########################################################################################################################
 #### SUB PROJECTS
 add_subdirectory(../Public/TLSF-2.4.6 ${CMAKE_CURRENT_BINARY_DIR}/TLSF)
+#add_subdirectory(../Public/OpenSSL ${CMAKE_CURRENT_BINARY_DIR}/OpenSSL)
 
 ########################################################################################################################
 #### PROJECT SOURCES
