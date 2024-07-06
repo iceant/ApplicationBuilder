@@ -22,6 +22,7 @@ typedef enum gai_object_type_enum{
     kGAI_ObjectType_Evaluator=2,
     kGAI_ObjectType_DecisionBranch=3,
     kGAI_ObjectType_DecisionTree=4,
+    kGAI_ObjectType_FSM,
 }gai_object_type_t;
 
 typedef struct gai_object_s{
