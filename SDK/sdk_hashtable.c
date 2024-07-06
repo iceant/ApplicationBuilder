@@ -327,3 +327,19 @@ sdk_hashtable_key_ops_t sdk_hashtable_string_key_ops={.hash=sdk_string_hash, .cp
 sdk_hashtable_val_ops_t sdk_hashtable_string_val_ops={.cp=sdk_string_cp, .free=sdk_string_free, .eq=sdk_string_eq, .arg=0};
 
 
+////////////////////////////////////////////////////////////////////////////////
+////
+
+static void* sdk_ptr_cp(const void *data, void *arg) {
+    return (void*)data;
+}
+
+static bool sdk_ptr_eq(const void *data1, const void *data2, void *arg) {
+    return (data1==data2)?true:false;
+}
+
+static void sdk_ptr_free(void *data, void *arg) {
+
+}
+
+sdk_hashtable_val_ops_t sdk_hashtable_ptr_val_ops={.cp=sdk_ptr_cp, .free=sdk_ptr_free, .eq=sdk_ptr_eq, .arg=0};

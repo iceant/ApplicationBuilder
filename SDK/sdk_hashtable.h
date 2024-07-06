@@ -63,6 +63,8 @@ void sdk_hashtable_foreach(sdk_hashtable_t * htable, void (*apply)(sdk_hashtable
 extern sdk_hashtable_key_ops_t sdk_hashtable_string_key_ops;
 extern sdk_hashtable_val_ops_t sdk_hashtable_string_val_ops;
 
+extern sdk_hashtable_val_ops_t sdk_hashtable_ptr_val_ops;
+
 
 
 #endif /*INCLUDED_SDK_HASHTABLE_H*/

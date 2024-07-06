@@ -2,7 +2,7 @@
 #define INCLUDED_SDK_PREDEFINE_H
 
 #ifndef SDK_CPU_BITS
-    #define SDK_CPU_BITS 32
+    #define SDK_CPU_BITS 64
 #endif
 
 #ifndef SDK_USE_TLSF

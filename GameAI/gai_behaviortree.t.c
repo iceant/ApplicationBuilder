@@ -89,6 +89,7 @@ int main(int argc, char** argv)
     
     ACTION_DEF(idle);
     ACTION(die, Action_Initialize, Action_Update, Action_Exit);
+//    ACTION_DEF(die);
     ACTION_DEF(flee);
     ACTION_DEF(reload);
     ACTION_DEF(shoot);
