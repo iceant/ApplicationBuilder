@@ -170,10 +170,11 @@ int gai_fsm_update(gai_fsm_t * fsm){
             gai_action_update(&fsm->current_state->action);
             return GAI_OK;
         }else if(status==kGAI_ActionStatus_TERMINATED){
+            gai_action_cleanup(&fsm->current_state->action);
+            
             char* to_state_name = 0;
             int err = gai_fsm_evaluate_transitions(fsm, &fsm->current_state->transition_list, &to_state_name);
             if(err!=GAI_OK){
-                gai_action_cleanup(&fsm->current_state->action);
                 return err;
             }
             gai_fsm_state_t * next_state=0;
@@ -182,10 +183,23 @@ int gai_fsm_update(gai_fsm_t * fsm){
                 return err;
             }
             
-            gai_action_cleanup(&fsm->current_state->action);
             gai_fsm_set_state(fsm, next_state);
             gai_action_initialize(&fsm->current_state->action);
             return GAI_OK;
+        }else if(status==kGAI_ActionStatus_UNINITIALIZED){
+            char* to_state_name = 0;
+            int err = gai_fsm_evaluate_transitions(fsm, &fsm->current_state->transition_list, &to_state_name);
+            if(err!=GAI_OK){
+                return err;
+            }
+            gai_fsm_state_t * next_state=0;
+            err = gai_fsm_find_state(fsm, to_state_name, &next_state);
+            if(err!=GAI_OK){
+                return err;
+            }
+            
+            gai_fsm_set_state(fsm, next_state);
+            gai_action_initialize(&fsm->current_state->action);
         }
     }
     return GAI_OK;

@@ -114,8 +114,9 @@ int main(int argc, char** argv){
     gai_fsm_set_state_by_name(&SoldierFSM, "idle");
     
     while(1){
-        if(gai_fsm_update(&SoldierFSM)!=GAI_OK){
-            break;
-        }
+//        if(gai_fsm_update(&SoldierFSM)!=GAI_OK){
+//            break;
+//        }
+        gai_fsm_update(&SoldierFSM);
     }
 }
