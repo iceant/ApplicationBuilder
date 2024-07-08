@@ -17,6 +17,16 @@
 #include <sdk_fmt.h>
 #endif /*INCLUDED_SDK_FMT_H*/
 
+////////////////////////////////////////////////////////////////////////////////
+////
+
+/*
+ 1  2  3  4  5  6  7  8  9  10
+ ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓  ↓
+  I  n  t  e  r  f  a  c  e
+ ↑  ↑  ↑  ↑  ↑  ↑  ↑  ↑   ↑  ↑
+ -9 -8 -7 -6 -5 -4 -3 -2 -1  0
+ */
 
 ////////////////////////////////////////////////////////////////////////////////
 //// Interface  ALLOCATE MEMORY
@@ -101,6 +111,8 @@ void sdk_str_fmt(int code, va_list_box *box,
                  int put(int c, void *cl), void *cl,
                  unsigned char flags[], int width, int precision);
 
-
+char* sdk_str_ltrim(char* str);
+char* sdk_str_rtrim(char* str);
+char* sdk_str_trim(char* str);
 
 #endif /*INCLUDED_SDK_STR_H*/

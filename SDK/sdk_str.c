@@ -1,6 +1,7 @@
 #include <sdk_str.h>
 #include <sdk_memory.h>
 #include <assert.h>
+#include <ctype.h>
 
 ////////////////////////////////////////////////////////////////////////////////
 ////
@@ -500,6 +501,45 @@ char* sdk_str_replace(char* original, char* pattern, char* replacement)
         }
         return returned;
     }
+}
+
+char* sdk_str_rtrim(char* str)
+{
+    if(str == NULL||*str == '\0')
+    {
+        return str;
+    }
+    size_t len = strlen(str);
+    char *p=str+len-1;
+    while(isspace(*p) && p>=str)
+    {
+        *p = '\0';
+        --p;
+    }
+    return str;
+}
+
+char* sdk_str_ltrim(char* str)
+{
+    if(str == NULL||*str == '\0')
+    {
+        return str;
+    }
+    char *p = str;
+    int len = 0;
+    while((*p!='\0') && isspace(*p))
+    {
+        ++p;
+        ++len;
+    }
+    memmove(str,p,strlen(str)-len+1);
+    return str;
+}
+
+char* sdk_str_trim(char* str){
+    str = sdk_str_rtrim(str);
+    str = sdk_str_ltrim(str);
+    return str;
 }
 
 
